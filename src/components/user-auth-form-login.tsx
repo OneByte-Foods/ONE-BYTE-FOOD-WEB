@@ -6,7 +6,7 @@ import { Input } from "./ui/input";
 import { useState } from "react";
 import { FcGoogle } from "react-icons/fc";
 
-export function UserAuthForm() {
+export function UserAuthFormLogin() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   async function onSubmit(event: React.SyntheticEvent) {
@@ -47,20 +47,8 @@ export function UserAuthForm() {
               autoCorrect="off"
               disabled={isLoading}
             />
-            <Label className="sr-only" htmlFor="cpassword">
-              confirm password
-            </Label>
-            <Input
-              id="cpassword"
-              placeholder="confirm password"
-              type="password"
-              autoCapitalize="none"
-              autoComplete="on"
-              autoCorrect="off"
-              disabled={isLoading}
-            />
           </div>
-          <Button disabled={isLoading}>Sign Up with Email</Button>
+          <Button disabled={isLoading}>Sign In with Email</Button>
         </div>
       </form>
       <div className="relative">
