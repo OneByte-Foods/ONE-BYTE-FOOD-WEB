@@ -8,6 +8,8 @@ import { usePathname } from "next/navigation";
 
 function Navigation() {
   const path = usePathname();
+  // const user = JSON.parse(localStorage.getItem("user") || "{}");
+  // console.log(user);
   return (
     <nav className="w-[250px] min-screen borderp py-3 px-6 flex flex-col gap-10 border">
       <div className="">
@@ -62,9 +64,9 @@ function Navigation() {
             <GoGear size={25} />
             <span className="text-sm">Settings</span>
           </Link>
+          {/* <p>{user.providerData[0].email}</p> */}
         </div>
       </div>
-    
     </nav>
   );
 }

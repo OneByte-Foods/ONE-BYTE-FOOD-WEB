@@ -5,19 +5,37 @@ import { Label } from "./ui/label";
 import { Input } from "./ui/input";
 import { useState } from "react";
 import { FcGoogle } from "react-icons/fc";
+import { useCreateUserWithEmailAndPassword } from "react-firebase-hooks/auth"
+import { auth } from "@/firebase/config";
 
 export function UserAuthForm() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
+  const [cpassword, setCPassword] = useState<string>("");
+  const [createUserWithEmailAndPassword, user, error,] = useCreateUserWithEmailAndPassword(auth);
 
   async function onSubmit(event: React.SyntheticEvent) {
     event.preventDefault();
     setIsLoading(true);
+
+    if (password !== cpassword) {
+      alert("Password does not match");
+      setIsLoading(false);
+      return;
+    }
+
+    const res = await createUserWithEmailAndPassword(email, password);
+    console.log(res);
 
     setTimeout(() => {
       setIsLoading(false);
     }, 3000);
   }
 
+  function handleSubmit() {
+    
+  }
   return (
     <div className="grid gap-4">
       <form onSubmit={onSubmit}>
@@ -34,6 +52,7 @@ export function UserAuthForm() {
               autoComplete="email"
               autoCorrect="off"
               disabled={isLoading}
+              onChange={(e) => setEmail(e.target.value)}
             />
             <Label className="sr-only" htmlFor="password">
               password
@@ -46,6 +65,7 @@ export function UserAuthForm() {
               autoComplete="on"
               autoCorrect="off"
               disabled={isLoading}
+              onChange={(e) => setPassword(e.target.value)}
             />
             <Label className="sr-only" htmlFor="cpassword">
               confirm password
@@ -57,10 +77,11 @@ export function UserAuthForm() {
               autoCapitalize="none"
               autoComplete="on"
               autoCorrect="off"
+              onChange={(e) => setCPassword(e.target.value)}
               disabled={isLoading}
             />
           </div>
-          <Button disabled={isLoading}>Sign Up with Email</Button>
+          <Button disabled={isLoading} onClick={handleSubmit}>Sign Up with Email</Button>
         </div>
       </form>
       <div className="relative">

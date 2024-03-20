@@ -5,19 +5,32 @@ import { Label } from "./ui/label";
 import { Input } from "./ui/input";
 import { useState } from "react";
 import { FcGoogle } from "react-icons/fc";
+import { useSignInWithEmailAndPassword } from "react-firebase-hooks/auth";
+import { auth } from "@/firebase/config";
+import { useRouter } from "next/navigation";
 
 export function UserAuthFormLogin() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
+  const [signInWithEmailAndPassword, user, error] = useSignInWithEmailAndPassword(auth);
+  const route = useRouter();
 
   async function onSubmit(event: React.SyntheticEvent) {
+   
     event.preventDefault();
     setIsLoading(true);
-
-    setTimeout(() => {
-      setIsLoading(false);
-    }, 3000);
+    const res = await signInWithEmailAndPassword(email, password);
+  
+    if (res) {
+      localStorage.setItem("user", JSON.stringify(res.user));
+      route.push("/dashboard");
+    }
+    setEmail("");
+    setPassword("");
+    setIsLoading(false);
   }
-
+  
   return (
     <div className="grid gap-4">
       <form onSubmit={onSubmit}>
@@ -28,24 +41,28 @@ export function UserAuthFormLogin() {
             </Label>
             <Input
               id="email"
+              value={email}
               placeholder="name@example.com"
               type="email"
               autoCapitalize="none"
               autoComplete="email"
               autoCorrect="off"
               disabled={isLoading}
+              onChange={(e) => setEmail(e.target.value)}
             />
             <Label className="sr-only" htmlFor="password">
               password
             </Label>
             <Input
               id="password"
+              value={password}
               placeholder="password"
               type="password"
               autoCapitalize="none"
               autoComplete="on"
               autoCorrect="off"
               disabled={isLoading}
+              onChange={(e) => setPassword(e.target.value)}
             />
           </div>
           <Button disabled={isLoading}>Sign In with Email</Button>
