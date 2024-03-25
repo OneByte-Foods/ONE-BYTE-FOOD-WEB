@@ -1,6 +1,6 @@
 "use client";
 import { db } from "@/firebase/config";
-import { collection, addDoc, Timestamp } from "firebase/firestore";
+import { doc, updateDoc } from "firebase/firestore";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -35,24 +35,29 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "./ui/textarea";
 
-function AddTable() {
+function UpdateTable({
+  tableData,
+  tableId,
+}: {
+  tableData: any;
+  tableId: string;
+}) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      tableName: "",
-      tableDescription: "",
+      tableName: tableData.tableName,
+      tableDescription: tableData.tableDescription,
     },
   });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     const { tableName, tableDescription } = values;
+    const taskDocRef = doc(db, "tasks", tableId);
     try {
-      await addDoc(collection(db, "tasks"), {
+      await updateDoc(taskDocRef, {
         tableName,
         tableDescription,
-        created: Timestamp.now(),
       });
-      //   onClose()
     } catch (err) {
       alert(err);
     }
@@ -60,10 +65,10 @@ function AddTable() {
 
   return (
     <Dialog>
-      <DialogTrigger className="bg-black text-white px-4 py-2">Add Table</DialogTrigger>
+      <DialogTrigger className="bg-black px-4 py-2 text-white">Update</DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Add Table</DialogTitle>
+          <DialogTitle>Update Table</DialogTitle>
           <DialogDescription>
             <Form {...form}>
               <form
@@ -110,4 +115,4 @@ function AddTable() {
   );
 }
 
-export default AddTable;
+export default UpdateTable;
