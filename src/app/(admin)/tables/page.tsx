@@ -5,6 +5,7 @@ import {collection, query, orderBy, onSnapshot} from "firebase/firestore"
 import { useEffect, useState } from "react";
 import { db } from "@/firebase/config";
 import UpdateTable from "@/components/UpdateTable";
+import DeleteTable from "@/components/DeleteTable";
 function Page() {
   
   const [tableData, setTableData] = useState<any[]>([]);
@@ -49,7 +50,9 @@ function Page() {
             />
           </svg>
           <h1>{table.data.tableName}</h1>
+          <h1>{table.data.tableDescription}</h1>
           <UpdateTable tableData={table.data} tableId={table.id} />
+          <DeleteTable tableId={ table.id} />
         </div>
       ))}
       <AddTable />

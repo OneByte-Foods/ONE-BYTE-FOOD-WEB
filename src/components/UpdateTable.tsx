@@ -94,7 +94,7 @@ function UpdateTable({
                   name="tableDescription"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Table Name</FormLabel>
+                      <FormLabel>Table Description</FormLabel>
                       <FormControl>
                         <Textarea placeholder="shadcn" {...field} />
                       </FormControl>
