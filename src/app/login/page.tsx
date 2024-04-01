@@ -16,7 +16,7 @@ export default function AuthenticationPage() {
           href="/"
           className="absolute left-4 top-4 md:left-8 md:top-8"
         >
-          Sing up
+          Sign up
         </Link>
 
         <div className="lg:p-8">

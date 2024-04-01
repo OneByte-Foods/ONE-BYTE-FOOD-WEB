@@ -6,31 +6,48 @@ import { Input } from "./ui/input";
 import { useState } from "react";
 import { FcGoogle } from "react-icons/fc";
 import { useSignInWithEmailAndPassword } from "react-firebase-hooks/auth";
-import { auth } from "@/firebase/config";
+import { auth, db } from "@/firebase/config";
 import { useRouter } from "next/navigation";
+import { doc, getDoc } from "firebase/firestore";
 
 export function UserAuthFormLogin() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
-  const [signInWithEmailAndPassword, user, error] = useSignInWithEmailAndPassword(auth);
+  const [signInWithEmailAndPassword, user, error] =
+    useSignInWithEmailAndPassword(auth);
   const route = useRouter();
 
   async function onSubmit(event: React.SyntheticEvent) {
-   
     event.preventDefault();
     setIsLoading(true);
     const res = await signInWithEmailAndPassword(email, password);
-  
-    if (res) {
-      localStorage.setItem("user", JSON.stringify(res.user));
-      route.push("/dashboard");
+
+    const userDocRef = doc(db, "Random_SigninUsers", res?.user.uid || "");
+
+    try {
+      const userDoc = await getDoc(userDocRef);
+      if (userDoc.exists()) {
+        if (userDoc.data().isAdmin) {
+          route.push("/daseboard");
+          return;
+        } else {
+          console.log("Not a admin!");
+          return;
+        }
+      } else {
+        console.log("No such document!");
+      }
+    } catch (error) {
+      console.error("Error getting user document:", error);
     }
+    route.push("/dashboard");
+
     setEmail("");
     setPassword("");
     setIsLoading(false);
   }
-  
+
   return (
     <div className="grid gap-4">
       <form onSubmit={onSubmit}>
