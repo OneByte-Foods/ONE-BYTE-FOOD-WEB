@@ -4,13 +4,19 @@ import { FiMail } from "react-icons/fi";
 import { useState } from "react";
 import { FcGoogle, FcImageFile } from "react-icons/fc";
 import { useCreateUserWithEmailAndPassword } from "react-firebase-hooks/auth";
-import { auth, db } from "@/firebase/config";
+import {
+  auth,
+  db,
+  registerWithEmailAndPassword,
+  signInWithGoogle,
+} from "@/firebase/config";
 import { addDoc, collection } from "firebase/firestore";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { MdOutlineLockClock } from "react-icons/md";
 import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
 import { FaUser } from "react-icons/fa";
+import { FirebaseError } from "firebase/app";
 
 export function UserAuthForm() {
   const route = useRouter();
@@ -22,7 +28,7 @@ export function UserAuthForm() {
 
   const [createUserWithEmailAndPassword, user, error] =
     useCreateUserWithEmailAndPassword(auth);
-  
+
   const emailValidation = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
   const passwordValidation = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,20}$/;
   const nameValidation = /^[a-zA-Z0-9._-]{3,20}$/;
@@ -31,35 +37,41 @@ export function UserAuthForm() {
     event.preventDefault();
     setErrorMessage("");
     if (!email || !password || !username) {
-      
       setErrorMessage("Please fill all the fields");
       return;
-    }
-    else if (!emailValidation.test(email)) {
+    } else if (!emailValidation.test(email)) {
       setErrorMessage("Please enter a valid email");
       return;
-    }
-    else if (!passwordValidation.test(password)) {
-      setErrorMessage("Password must be 6 to 20 characters which contain at least one numeric digit, one uppercase and one lowercase letter");
+    } else if (!passwordValidation.test(password)) {
+      setErrorMessage(
+        "Password must be 6 to 20 characters which contain at least one numeric digit, one uppercase and one lowercase letter"
+      );
       return;
-    }
-    else if (!nameValidation.test(username)) {
+    } else if (!nameValidation.test(username)) {
       setErrorMessage("Username must be 3 to 20 characters");
       return;
     }
 
-    const res = await createUserWithEmailAndPassword(email, password);
-
-
-    await addDoc(collection(db, "Random_Signin_Users"), {
-      email: res?.user.email,
-      username: username,
-      isAdmin: false,
-      imageUrl: `https://ui-avatars.com/api/?name=${username}`,
-      uid: res?.user.uid,
-    });
-    route.push("/login");
+    const res: any = await registerWithEmailAndPassword(
+      username,
+      email,
+      password
+    );
+    if (res) {
+      setErrorMessage(res);
+    } else {
+      route.push("/login");
+    }
   }
+
+  const logGoogleUser = async () => {
+    const res = await signInWithGoogle();
+    if (res) {
+      setErrorMessage(res);
+      return;
+    }
+    route.push("/");
+  };
 
   function handleShowPassword() {
     setShowPassword(!showPassword);
@@ -142,7 +154,7 @@ export function UserAuthForm() {
         <p className="text-center text-[22px]">Or</p>
         <p className="text-center text-[22px] text-[#222] ">Login Using</p>
         <div className="flex items-center justify-center gap-5">
-          <FcGoogle className="text-[28px]" />
+          <FcGoogle className="text-[28px]" onClick={logGoogleUser} />
         </div>
       </div>
     </div>

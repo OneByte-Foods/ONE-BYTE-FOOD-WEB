@@ -1,12 +1,14 @@
 "use client";
 
-import { Button } from "./ui/button";
-import { Label } from "./ui/label";
-import { Input } from "./ui/input";
 import { useState } from "react";
 import { FcGoogle } from "react-icons/fc";
 import { useSignInWithEmailAndPassword } from "react-firebase-hooks/auth";
-import { auth, db } from "@/firebase/config";
+import {
+  auth,
+  db,
+  logInWithEmailAndPassword,
+  signInWithGoogle,
+} from "@/firebase/config";
 import { useRouter } from "next/navigation";
 import { doc, getDoc } from "firebase/firestore";
 import { FaRegEye, FaRegEyeSlash, FaUser } from "react-icons/fa";
@@ -19,40 +21,47 @@ export function UserAuthFormLogin() {
   const [password, setPassword] = useState<string>("");
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string>("");
-  const [signInWithEmailAndPassword, user, error] =
-    useSignInWithEmailAndPassword(auth);
+
   const route = useRouter();
+
+  const logGoogleUser = async () => {
+    const res = await signInWithGoogle();
+    if (res) {
+      setErrorMessage(res);
+      return;
+    }
+    route.push("/");
+  };
 
   async function handleSubmit(event: React.SyntheticEvent) {
     event.preventDefault();
     setErrorMessage("");
 
-    const res = await signInWithEmailAndPassword(email, password);
-    
-    if (!res?.user) {
-      setErrorMessage("Invalid email or password");
+    const res = await logInWithEmailAndPassword(email, password);
+
+    // const userDocRef = doc(db, "Random_SigninUsers", res?.user.uid || "");
+
+    // try {
+    //   const userDoc = await getDoc(userDocRef);
+    //   if (userDoc.exists()) {
+    //     if (userDoc.data().isAdmin) {
+    //       route.push("/daseboard");
+    //       return;
+    //     } else {
+    //       route.push("/");
+    //       return;
+    //     }
+    //   } else {
+    //     console.log("No such document!");
+    //   }
+    // } catch (error) {
+    //   console.error("Error getting user document:", error);
+    // }
+    if (res) {
+      setErrorMessage(res);
       return;
     }
-
-    const userDocRef = doc(db, "Random_SigninUsers", res?.user.uid || "");
-
-    try {
-      const userDoc = await getDoc(userDocRef);
-      if (userDoc.exists()) {
-        if (userDoc.data().isAdmin) {
-          route.push("/daseboard");
-          return;
-        } else {
-          route.push("/");
-          return;
-        }
-      } else {
-        console.log("No such document!");
-      }
-    } catch (error) {
-      console.error("Error getting user document:", error);
-    }
-    route.push("/dashboard");
+    route.push("/");
 
     setEmail("");
     setPassword("");
@@ -120,7 +129,7 @@ export function UserAuthFormLogin() {
             Login
           </button>
           <Link
-            href="/login"
+            href="/signup"
             className="bg-transparent w-[190px] px-6 py-3 text-xl rounded-[20px] border border-[#F17228] text-center transition-all hover:bg-[#F17228] hover:border-[#F17228]"
           >
             Sign Up
@@ -129,7 +138,10 @@ export function UserAuthFormLogin() {
         <p className="text-center text-[22px]">Or</p>
         <p className="text-center text-[22px] text-[#222] ">Login Using</p>
         <div className="flex items-center justify-center gap-5">
-          <FcGoogle className="text-[28px]" />
+          <FcGoogle
+            className="text-[28px] cursor-pointer"
+            onClick={logGoogleUser}
+          />
         </div>
       </div>
     </div>
