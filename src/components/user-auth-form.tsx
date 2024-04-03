@@ -22,7 +22,7 @@ export function UserAuthForm() {
 
   const [createUserWithEmailAndPassword, user, error] =
     useCreateUserWithEmailAndPassword(auth);
-
+  
   const emailValidation = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
   const passwordValidation = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,20}$/;
   const nameValidation = /^[a-zA-Z0-9._-]{3,20}$/;
@@ -31,22 +31,25 @@ export function UserAuthForm() {
     event.preventDefault();
     setErrorMessage("");
     if (!email || !password || !username) {
+      
       setErrorMessage("Please fill all the fields");
       return;
-    } else if (!emailValidation.test(email)) {
+    }
+    else if (!emailValidation.test(email)) {
       setErrorMessage("Please enter a valid email");
       return;
-    } else if (!passwordValidation.test(password)) {
-      setErrorMessage(
-        "Password must be 6 to 20 characters which contain at least one numeric digit, one uppercase and one lowercase letter"
-      );
+    }
+    else if (!passwordValidation.test(password)) {
+      setErrorMessage("Password must be 6 to 20 characters which contain at least one numeric digit, one uppercase and one lowercase letter");
       return;
-    } else if (!nameValidation.test(username)) {
+    }
+    else if (!nameValidation.test(username)) {
       setErrorMessage("Username must be 3 to 20 characters");
       return;
     }
 
     const res = await createUserWithEmailAndPassword(email, password);
+
 
     await addDoc(collection(db, "Random_Signin_Users"), {
       email: res?.user.email,
