@@ -8,8 +8,6 @@ import { usePathname } from "next/navigation";
 
 function Navigation() {
   const path = usePathname();
-  // const user = JSON.parse(localStorage.getItem("user") || "{}");
-  // console.log(user);
   return (
     <nav className="w-[250px] min-screen borderp py-3 px-6 flex flex-col gap-10 border">
       <div className="">
