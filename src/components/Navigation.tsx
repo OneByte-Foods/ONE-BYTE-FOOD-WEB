@@ -3,6 +3,7 @@ import Link from "next/link";
 import { MdOutlineTableBar } from "react-icons/md";
 import { IoRestaurantOutline } from "react-icons/io5";
 import { VscGraph } from "react-icons/vsc";
+import { MdOutlineBookmarkAdded } from "react-icons/md";
 import { GoGear } from "react-icons/go";
 import { usePathname } from "next/navigation";
 
@@ -38,6 +39,15 @@ function Navigation() {
           >
             <MdOutlineTableBar size={25} />
             <span className="text-sm">Tables</span>
+          </Link>
+          <Link
+            href="/bookings"
+            className={`flex items-end gap-2 px-5 py-3 rounded-2xl ${
+              path == "/bookings" ? "bg-[#c1bcbc74]" : ""
+            }`}
+          >
+            <MdOutlineBookmarkAdded size={25} />
+            <span className="text-sm">Bookings</span>
           </Link>
           <Link
             href="/tables"
