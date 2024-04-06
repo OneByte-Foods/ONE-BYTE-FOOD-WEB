@@ -50,7 +50,7 @@ function Navigation() {
             <span className="text-sm">Bookings</span>
           </Link>
           <Link
-            href="/tables"
+            href="/menu"
             className={`flex items-end gap-2 px-5 py-3 rounded-2xl ${
               path == "/menu" ? "bg-[#c1bcbc74]" : ""
             }`}
