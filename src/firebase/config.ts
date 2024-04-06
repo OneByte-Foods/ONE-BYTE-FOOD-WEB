@@ -9,6 +9,7 @@ import {
   signInWithPopup,
   signOut,
 } from "firebase/auth";
+import {getDatabase} from "firebase/database";
 import {
   addDoc,
   collection,
@@ -22,6 +23,7 @@ import { cookies } from "next/headers";
 const firebaseConfig = {
   apiKey: "AIzaSyCBT_nA3MaVqdH0wejdtqlGAGuW0m6uXxg",
   authDomain: "one-bytes-backend.firebaseapp.com",
+  databaseURL: "https://one-bytes-backend-default-rtdb.asia-southeast1.firebasedatabase.app/",
   projectId: "one-bytes-backend",
   storageBucket: "one-bytes-backend.appspot.com",
   messagingSenderId: "971806294877",
@@ -35,6 +37,8 @@ const app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
 const db = getFirestore(app);
 
 const auth = getAuth(app);
+
+const realDb = getDatabase(app);
 
 const googleProvider = new GoogleAuthProvider();
 googleProvider.setCustomParameters({ prompt: "select_account" });
@@ -110,6 +114,7 @@ export {
   app,
   auth,
   db,
+  realDb,
   registerWithEmailAndPassword,
   signInWithGoogle,
   logInWithEmailAndPassword,

@@ -1,3 +1,5 @@
+"use client";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -5,8 +7,49 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { realDb } from "@/firebase/config";
+import { onValue, push, ref, set } from "firebase/database";
+import { useEffect, useState } from "react";
+import gsap from "gsap";
 
 function Page() {
+  const [projects, setProjects] = useState<any[]>([]);
+
+  const addDummyBooking = () => {
+    set(push(ref(realDb, "bookings")), {
+      id: 2,
+      name: "SMith",
+      email: "alex@gmail.com",
+    });
+  };
+
+  useEffect(() => {
+    const fetchData = () => {
+      const projectsRef = ref(realDb, "bookings");
+      onValue(projectsRef, (snapshot) => {
+        setProjects([]);
+        const data = snapshot.val();
+        if (data !== null) {
+          const projectsData = Object.values(data);
+          setProjects((prev) => [...prev, ...projectsData]);
+        }
+      });
+    };
+
+    fetchData();
+  }, []);
+  useEffect(() => {
+    // Animate the added project
+    const addedProject = projects[projects.length - 1];
+    if (addedProject) {
+      gsap.from(
+        `#project-${addedProject.id}`,
+
+        { y: 30, opacity: 0, duration: 1, ease: "power3.out" }
+      );
+    }
+  }, [projects]);
+
   return (
     <>
       <div className="flex-1 space-y-4 p-8 pt-6">
@@ -130,14 +173,23 @@ function Page() {
             <Card className="col-span-3">
               <CardHeader>
                 <CardTitle>Recent Tables Booking</CardTitle>
-                <CardDescription>
-                  You made 265 sales this month.
+                <CardDescription className="transition-all duration-200">
+                  {projects.map((project) => (
+                    <p
+                      key={project.name}
+                      className="opacity-100"
+                      id={`project-${project.id}`}
+                    >
+                      {project.name}
+                    </p>
+                  ))}
                 </CardDescription>
               </CardHeader>
-              <CardContent>{/* <RecentSales /> */}</CardContent>
+              <CardContent></CardContent>
             </Card>
           </div>
         </div>
+        <Button onClick={addDummyBooking}>add book</Button>
       </div>
     </>
   );

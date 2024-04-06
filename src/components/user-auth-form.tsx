@@ -154,7 +154,7 @@ export function UserAuthForm() {
         <p className="text-center text-[22px]">Or</p>
         <p className="text-center text-[22px] text-[#222] ">Login Using</p>
         <div className="flex items-center justify-center gap-5">
-          <FcGoogle className="text-[28px]" onClick={logGoogleUser} />
+          <FcGoogle className="text-[28px] cursor-pointer" onClick={logGoogleUser} />
         </div>
       </div>
     </div>
