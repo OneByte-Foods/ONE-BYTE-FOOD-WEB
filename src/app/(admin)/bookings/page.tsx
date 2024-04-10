@@ -3,64 +3,94 @@ import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { Button, Timeline } from "flowbite-react";
 import { HiArrowNarrowRight, HiCalendar } from "react-icons/hi";
 import gsap from "gsap";
+import { onValue, push, ref, set } from "firebase/database";
+import { realDb } from "@/firebase/config";
+import { Canvas, useFrame, useThree } from "react-three-fiber";
+import {OrbitControls, PerspectiveCamera} from "@react-three/drei"
 
+import * as THREE from "three";
+import Bird from "../../../components/Bird";
 interface TimelineItem {
-  id: number;
-  month: string;
-  title: string;
-  description: string;
+  id: string | number;
+  img: string;
+  email: string;
+  time: string;
+  table: number;
+  tableName: string;
 }
 
 function Page() {
-  const [items, setItems] = useState<TimelineItem[]>([
+  const [bookings, setBookings] = useState<TimelineItem[]>([
     {
       id: 1,
-      month: "February 2022",
-      title: "Application UI code in Tailwind CSS",
-      description:
-        "Get access to over 20+ pages including a dashboard layout, charts, kanban board, calendar, and pre-order E-commerce & Marketing pages.",
+      img: "https://lh3.googleusercontent.com/a/ACg8ocLr0k4w3YxeRneAjbx3ygTqvGzajHQA-a0ehuw9lU2AuL5I=s96-c",
+      email: "bikalpa@gmail.com",
+      time: "12:00 PM",
+      table: 1,
+      tableName: "Table 1",
     },
   ]);
   const timelineRef = useRef<HTMLUListElement>(null);
+  // useThree(({ camera }) => {
+  //   camera.rotation.set(THREE.MathUtils.degToRad(30), 0, 0);
+  // });
 
-  // Function to scroll to the bottom
-  //of the div using scrollIntoView method
 
-  useLayoutEffect(() => {
+  useEffect(() => {
+    const fetchData = () => {
+      const projectsRef = ref(realDb, "Bookings");
+      onValue(projectsRef, (snapshot) => {
+        // setBookings([]);
+        const data = snapshot.val();
+        if (data !== null) {
+          const dataArray = Object.keys(data).map((key) => ({
+            id: key,
+            ...data[key],
+          }));
+          console.log(dataArray);
+          setBookings(dataArray);
+        }
+      });
+    };
+
+    fetchData();
+  }, []);
+
+  console.log(bookings);
+  useEffect(() => {
     const scrollableDiv: any = document.getElementById("timeline");
-    var bottomElement = scrollableDiv.lastElementChild;
+
+    const bottomElement = scrollableDiv.lastElementChild;
     bottomElement.scrollIntoView({ behavior: "smooth", block: "end" });
-    // gsap.to("#timeline", {
-    //   y: 0,
-    //   duration: 1,
-    //   stagger: 0.2,
-    //   ease: "power3.out"
-    // });
-  }, [items]);
+  }, [bookings]);
 
   const addItem = () => {
-    const newItem: TimelineItem = {
-      id: items.length + 1,
-      month: "March 2022",
-      title: "New Item",
-      description: "Description of the new item",
-    };
-    setItems([...items, newItem]);
+    set(push(ref(realDb, "Bookings")), {
+      id: 2,
+      img: "https://lh3.googleusercontent.com/a/ACg8ocLr0k4w3YxeRneAjbx3ygTqvGzajHQA-a0ehuw9lU2AuL5I=s96-c",
+      email: "bikalpa@gmail.com",
+      time: "1:00 PM",
+      table: 1,
+      tableName: "Table 1",
+    });
   };
 
   return (
-    <div className="flex w-screen h-screen">
-      <Button onClick={addItem}>Add Item</Button>
+    <div className="flex w-screen h-screen items-center">
+    
+      <Canvas className="">
+        <Thing />
+      </Canvas>
 
       <div className="h-screen w-[60%] border no-scrollbar px-10 overflow-y-auto">
         <Timeline id="timeline" className=" h-fit border-l-2">
-          {items.map((item) => (
+          {bookings.map((item) => (
             <Timeline.Item key={item.id}>
               <Timeline.Point icon={HiCalendar} />
               <Timeline.Content>
-                <Timeline.Time>{item.month}</Timeline.Time>
-                <Timeline.Title>{item.title}</Timeline.Title>
-                <Timeline.Body>{item.description}</Timeline.Body>
+                <Timeline.Time>{Object.keys(item)}</Timeline.Time>
+                <Timeline.Title>{item.email}</Timeline.Title>
+                <Timeline.Body>{item.table}</Timeline.Body>
                 <Button color="gray">
                   Learn More
                   <HiArrowNarrowRight className="ml-2 h-3 w-3" />
@@ -75,3 +105,27 @@ function Page() {
 }
 
 export default Page;
+
+function Thing() {
+  const ref = useRef<any>(null);
+  const config = { fov: 35, position: [0, 0, 10] }
+  // useFrame(() => (ref.current.rotation.x = ref.current.rotation.y += 0.02));
+  return (
+    <>
+     <ambientLight />
+      <OrbitControls minDistance={800} maxDistance={800}/>
+      <Bird />
+    {/* <mesh
+      ref={ref}
+      onClick={(e) => console.log("click")}
+      onPointerOver={(e) => console.log("hover")}
+      onPointerOut={(e) => console.log("unhover")}
+      >
+      <primitive object={new THREE.BoxGeometry(1, 1, 1)} />
+     
+      <meshNormalMaterial attach="material" />
+    </mesh> */}
+    
+      </>
+  );
+}
