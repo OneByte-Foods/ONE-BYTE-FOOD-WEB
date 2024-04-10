@@ -1,3 +1,4 @@
+import Hero from "@/components/users/Hero";
 import Home from "@/components/users/Home";
 import Navbar from "@/components/users/Navbar";
 import { Metadata } from "next";
@@ -11,7 +12,8 @@ export default function AuthenticationPage() {
   return (
     <>
       <Navbar />
-      <Home />
+      {/* <Home /> */}
+      <Hero />
     </>
   );
 }
