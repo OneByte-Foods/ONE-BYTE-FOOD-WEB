@@ -32,16 +32,16 @@ function Hero() {
         <Image
           ref={imgRef}
           src={Plate}
-          height={300}
-          width={300}
+          height={270}
+          width={270}
           alt="plate"
           className=" absolute top-0 -z-10"
         />
         <Image
           ref={imgRef1}
           src={Plate}
-          height={300}
-          width={300}
+          height={270}
+          width={270}
           alt="plate"
           className=" absolute bottom-0 -z-10"
         />

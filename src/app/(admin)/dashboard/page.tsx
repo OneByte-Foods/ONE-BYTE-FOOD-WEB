@@ -11,9 +11,16 @@ import { realDb } from "@/firebase/config";
 import { onValue, push, ref, set } from "firebase/database";
 import { useEffect, useState } from "react";
 import gsap from "gsap";
-import { LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip } from 'recharts';
+import {
+  LineChart,
+  Line,
+  CartesianGrid,
+  XAxis,
+  YAxis,
+  Tooltip,
+} from "recharts";
 function Page() {
-  const [projects, setProjects] = useState<any[]>([]);
+  const [bookings, setBookings] = useState<any[]>([]);
 
   const addDummyBooking = () => {
     set(push(ref(realDb, "bookings")), {
@@ -25,43 +32,43 @@ function Page() {
 
   const data = [
     {
-      name: 'Page A',
+      name: "Page A",
       uv: 4000,
       pv: 2400,
       amt: 2400,
     },
     {
-      name: 'Page B',
+      name: "Page B",
       uv: 3000,
       pv: 1398,
       amt: 2210,
     },
     {
-      name: 'Page C',
+      name: "Page C",
       uv: 2000,
       pv: 9800,
       amt: 2290,
     },
     {
-      name: 'Page D',
+      name: "Page D",
       uv: 2780,
       pv: 3908,
       amt: 2000,
     },
     {
-      name: 'Page E',
+      name: "Page E",
       uv: 1890,
       pv: 4800,
       amt: 2181,
     },
     {
-      name: 'Page F',
+      name: "Page F",
       uv: 2390,
       pv: 3800,
       amt: 2500,
     },
     {
-      name: 'Page G',
+      name: "Page G",
       uv: 3490,
       pv: 4300,
       amt: 2100,
@@ -70,30 +77,35 @@ function Page() {
 
   useEffect(() => {
     const fetchData = () => {
-      const projectsRef = ref(realDb, "bookings");
+      const projectsRef = ref(realDb, "Bookings");
       onValue(projectsRef, (snapshot) => {
-        setProjects([]);
+        // setBookings([]);
         const data = snapshot.val();
         if (data !== null) {
-          const projectsData = Object.values(data);
-          setProjects((prev) => [...prev, ...projectsData]);
+          const dataArray = Object.keys(data).map((key) => ({
+            id: key,
+            ...data[key],
+          }));
+          console.log(dataArray);
+          setBookings(dataArray);
         }
       });
     };
 
     fetchData();
   }, []);
+  console.log(bookings);
+
   useEffect(() => {
     // Animate the added project
-    const addedProject = projects[projects.length - 1];
-    if (addedProject) {
-      gsap.from(
-        `#project-${addedProject.id}`,
-
-        { y: 30, opacity: 0, duration: 1, ease: "power3.out" }
-      );
-    }
-  }, [projects]);
+    // const addedProject = projects[projects.length - 1];
+    // if (addedProject) {
+    //   gsap.from(
+    //     `#project-${addedProject.id}`,
+    //     { y: 30, opacity: 0, duration: 1, ease: "power3.out" }
+    //   );
+    // }
+  }, []);
 
   return (
     <>
@@ -226,15 +238,39 @@ function Page() {
             <Card className="col-span-3">
               <CardHeader>
                 <CardTitle>Recent Tables Booking</CardTitle>
-                <CardDescription className="transition-all duration-200">
-                  {projects.map((project) => (
-                    <p
-                      key={project.name}
+                <CardDescription className="transition-all duration-200 flex flex-col gap-4 divide-y-2">
+                  {bookings.map((booking) => (
+                    <div
+                      key={booking.id}
                       className="opacity-100"
-                      id={`project-${project.id}`}
+                      id={`project-${booking.id}`}
                     >
-                      {project.email}
-                    </p>
+                      <div className="flex items-center justify-between">
+                        <div className="flex gap-4 items-center">
+                          <img
+                            src={booking.users.useProfilePic}
+                            alt="profile"
+                            className="w-10 h-10 rounded-full"
+                          />
+                          <div>
+                            <h1 className="text-xl font-bold">
+                              {booking.users.userName}
+                            </h1>
+                            <div className="text-sm font-semibold">
+                              {booking.users.userEmail}
+                            </div>
+                          </div>
+                        </div>
+                        <div>
+                          <h1 className="">
+                            Table Type: {booking.users.tableType}
+                          </h1>
+                          <div className="text-sm font-semibold">
+                            Seat No. {booking.users.seatNumber}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
                   ))}
                 </CardDescription>
               </CardHeader>
