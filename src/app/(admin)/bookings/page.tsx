@@ -5,11 +5,9 @@ import { HiArrowNarrowRight, HiCalendar } from "react-icons/hi";
 import gsap from "gsap";
 import { onValue, push, ref, set } from "firebase/database";
 import { realDb } from "@/firebase/config";
-import { Canvas, useFrame, useThree } from "react-three-fiber";
-import { OrbitControls, PerspectiveCamera } from "@react-three/drei";
-
-import * as THREE from "three";
+import HomeBurger from "@/components/users/HomeBurger";
 interface user {
+  id: string;
   seatNumber: number;
   userEmail: string;
   useProfilePic: string;
@@ -18,12 +16,11 @@ interface user {
   userName: string;
 }
 interface TimelineItem {
-  id: string | number;
-  users: user;
+  users: user[];
 }
 
 function Page() {
-  const [bookings, setBookings] = useState<TimelineItem[]>([]);
+  const [bookings, setBookings] = useState<user[]>([]);
   const timelineRef = useRef<HTMLUListElement>(null);
 
   useEffect(() => {
@@ -32,11 +29,12 @@ function Page() {
       onValue(projectsRef, (snapshot) => {
         // setBookings([]);
         const data = snapshot.val();
-        if (data !== null) {
-          const dataArray = Object.keys(data).map((key) => ({
-            id: key,
-            ...data[key],
-          }));
+       
+          if (data !== null) {
+            const dataArray:any = Object.keys(data.floorLevel1.users).map((key) => ({
+              id: key,
+              ...data.floorLevel1.users[key],
+            }));
           // console.log(dataArray);
           setBookings(dataArray);
         }
@@ -55,6 +53,7 @@ function Page() {
 
   return (
     <div className="flex w-screen h-screen items-center">
+      <HomeBurger />
       <div className="h-screen py-5 w-[60%] border no-scrollbar px-10 overflow-y-auto">
         <Timeline id="timeline" className=" h-fit border-l-2">
           {bookings.map((item) => (
@@ -63,21 +62,21 @@ function Page() {
               <Timeline.Content>
                 <Timeline.Time className="flex gap-3 items-center">
                   <img
-                    src={item.users.useProfilePic}
+                    src={item.useProfilePic}
                     alt="profile user"
                     className="w-10 h-10 rounded-full"
                   />
                   <div className="flex flex-col gap-2">
-                    <span>{item.users.userName}</span>
-                    <span>{item.users.userEmail}</span>
+                    <span>{item.userName}</span>
+                    <span>{item.userEmail}</span>
                   </div>
                 </Timeline.Time>
                 {/* <Timeline.Title>{item.email}</Timeline.Title> */}
                 <Timeline.Body>
-                  TableType: {item.users.tableType} <br />
-                  SeatNumber: {item.users.seatNumber} <br />
+                  TableType: {item.tableType} <br />
+                  SeatNumber: {item.seatNumber} <br />
                 </Timeline.Body>
-                status: {item.users.status}
+                status: {item.status}
               </Timeline.Content>
             </Timeline.Item>
           ))}

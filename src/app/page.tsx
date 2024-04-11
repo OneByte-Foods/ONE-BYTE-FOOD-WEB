@@ -1,5 +1,7 @@
+import Footer from "@/components/users/Footer";
 import Hero from "@/components/users/Hero";
 import Home from "@/components/users/Home";
+import Menu from "@/components/users/Menu";
 import Navbar from "@/components/users/Navbar";
 import { Metadata } from "next";
 
@@ -14,6 +16,8 @@ export default function AuthenticationPage() {
       <Navbar />
       {/* <Home /> */}
       <Hero />
+      <Menu />
+      <Footer />
     </>
   );
 }

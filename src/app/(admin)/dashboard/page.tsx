@@ -79,14 +79,21 @@ function Page() {
     const fetchData = () => {
       const projectsRef = ref(realDb, "Bookings");
       onValue(projectsRef, (snapshot) => {
-        // setBookings([]);
+        setBookings([]);
         const data = snapshot.val();
+        console.log(data);
         if (data !== null) {
-          const dataArray = Object.keys(data).map((key) => ({
-            id: key,
-            ...data[key],
-          }));
-          console.log(dataArray);
+          const dataArray: any = Object.keys(data.floorLevel1.users).map(
+            (key) => ({
+              id: key,
+              ...data.floorLevel1.users[key],
+            })
+          );
+          // console.log(dataArray);
+          // const usersArray = Object.keys(dataArray.users).map((userId) => ({
+          //   id: Math.random().toString(36).substr(2, 9), // generate random ID
+          //   ...dataArray.users[userId], // spread user details
+          // }));
           setBookings(dataArray);
         }
       });
@@ -248,25 +255,23 @@ function Page() {
                       <div className="flex items-center justify-between">
                         <div className="flex gap-4 items-center">
                           <img
-                            src={booking.users.useProfilePic}
+                            src={booking.useProfilePic}
                             alt="profile"
                             className="w-10 h-10 rounded-full"
                           />
                           <div>
                             <h1 className="text-xl font-bold">
-                              {booking.users.userName}
+                              {booking.userName}
                             </h1>
                             <div className="text-sm font-semibold">
-                              {booking.users.userEmail}
+                              {booking.userEmail}
                             </div>
                           </div>
                         </div>
                         <div>
-                          <h1 className="">
-                            Table Type: {booking.users.tableType}
-                          </h1>
+                          <h1 className="">Table Type: {booking.tableType}</h1>
                           <div className="text-sm font-semibold">
-                            Seat No. {booking.users.seatNumber}
+                            Seat No. {booking.seatNumber}
                           </div>
                         </div>
                       </div>
