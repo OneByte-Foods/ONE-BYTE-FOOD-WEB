@@ -58,7 +58,7 @@ function Navbar() {
       {user ? (
         <DropdownMenu>
           <DropdownMenuTrigger className=" h-10 w-10 border rounded-full overflow-hidden">
-            {user && <img src={user.useProfilePic} />}
+            {user && <img src={user.photoURL} />}
           </DropdownMenuTrigger>
           <DropdownMenuContent>
             <DropdownMenuLabel>My Account</DropdownMenuLabel>
