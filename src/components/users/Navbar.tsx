@@ -8,11 +8,11 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-import Link from "next/link";
-import { MdLocationPin } from "react-icons/md";
-import { FaUser } from "react-icons/fa";
-import { useEffect, useState } from "react";
 import { logout } from "@/firebase/config";
+import Link from "next/link";
+import { useEffect, useState } from "react";
+import { FaUser } from "react-icons/fa";
+import { MdLocationPin } from "react-icons/md";
 
 function Navbar() {
   const [user, setUser] = useState<any>(null);
@@ -58,7 +58,7 @@ function Navbar() {
       {user ? (
         <DropdownMenu>
           <DropdownMenuTrigger className=" h-10 w-10 border rounded-full overflow-hidden">
-            {user && <img src={user.photoURL} />}
+            {user && <img src={user.useProfilePic} />}
           </DropdownMenuTrigger>
           <DropdownMenuContent>
             <DropdownMenuLabel>My Account</DropdownMenuLabel>
