@@ -8,11 +8,11 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-import Link from "next/link";
-import { MdLocationPin } from "react-icons/md";
-import { FaUser } from "react-icons/fa";
-import { useEffect, useState } from "react";
 import { logout } from "@/firebase/config";
+import Link from "next/link";
+import { useEffect, useState } from "react";
+import { FaUser } from "react-icons/fa";
+import { MdLocationPin } from "react-icons/md";
 
 function Navbar() {
   const [user, setUser] = useState<any>(null);
