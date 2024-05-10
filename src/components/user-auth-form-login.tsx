@@ -1,14 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { FcGoogle } from "react-icons/fc";
-import { useSignInWithEmailAndPassword } from "react-firebase-hooks/auth";
-import {
-  auth,
-  db,
-  logInWithEmailAndPassword,
-  signInWithGoogle,
-} from "@/firebase/config";
+import { logInWithEmailAndPassword, signInWithGoogle } from "@/firebase/config";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 
@@ -22,21 +15,32 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { useDispatch } from "react-redux";
+import { loginSuccess } from "../../redux/features/auth-slice";
+import { setUser } from "../../redux/features/users-slice";
 
 export function UserAuthFormLogin() {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [errorMessage, setErrorMessage] = useState<string>("");
+  const dispatch = useDispatch();
 
   const route = useRouter();
 
   const logGoogleUser = async () => {
     const res = await signInWithGoogle();
-    if (res) {
-      setErrorMessage(res);
+    console.log(res);
+    if (typeof res == "string") {
+      setErrorMessage(res); // Set error message if Google sign-in fails
       return;
     }
-    route.push("/");
+    dispatch(
+      loginSuccess({
+        uid: res.uid,
+      })
+    );
+    localStorage.setItem("uid", JSON.stringify(res.uid));
+    route.push("/"); // Redirect to home page after successful Google sign-in
   };
 
   async function handleSubmit(event: React.SyntheticEvent) {
@@ -44,11 +48,27 @@ export function UserAuthFormLogin() {
     setErrorMessage("");
 
     const res = await logInWithEmailAndPassword(email, password);
+    console.log(res);
 
-    if (res) {
+    if (typeof res == "string") {
       setErrorMessage(res);
       return;
     }
+
+    dispatch(
+      loginSuccess({
+        uid: res.uid,
+      })
+    );
+    dispatch(
+      setUser({
+        email: res.email,
+        imageUrl: `https://ui-avatars.com/api/?name=${res.username}`,
+        username: res.username,
+        roles: res.role,
+      })
+    );
+    localStorage.setItem("uid", JSON.stringify(res.uid));
     route.push("/");
 
     setEmail("");

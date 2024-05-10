@@ -1,16 +1,9 @@
 "use client";
-// Import necessary components and hooks
-import { FiMail } from "react-icons/fi";
 import { useState } from "react";
-import { FcGoogle, FcImageFile } from "react-icons/fc";
-import { useCreateUserWithEmailAndPassword } from "react-firebase-hooks/auth"; // Firebase authentication hook
 import {
-  auth,
-  db,
   registerWithEmailAndPassword,
   signInWithGoogle,
 } from "@/firebase/config"; // Firebase configuration
-import { addDoc, collection } from "firebase/firestore"; // Firebase Firestore
 import { useRouter } from "next/navigation"; // Next.js router
 import Link from "next/link"; // Next.js Link component
 
@@ -24,6 +17,9 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { useDispatch } from "react-redux";
+import { loginSuccess } from "../../redux/features/auth-slice";
+import { setUser } from "../../redux/features/users-slice";
 
 // User authentication form component
 export function UserAuthForm() {
@@ -32,6 +28,7 @@ export function UserAuthForm() {
   const [password, setPassword] = useState<string>(""); // Password state
   const [username, setUsername] = useState<string>(""); // Username state
   const [errorMessage, setErrorMessage] = useState<string>(""); // Error message state
+  const dispatch = useDispatch();
 
   // Regular expressions for input validation
   const emailValidation = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
@@ -64,8 +61,8 @@ export function UserAuthForm() {
       email,
       password
     );
-    console.log(res);
-    if (res) {
+
+    if (typeof res === "string") {
       setErrorMessage(res);
     } else {
       route.push("/login");
@@ -76,10 +73,16 @@ export function UserAuthForm() {
   const logGoogleUser = async () => {
     const res = await signInWithGoogle();
     console.log(res);
-    if (res) {
+    if (typeof res == "string") {
       setErrorMessage(res); // Set error message if Google sign-in fails
       return;
     }
+    dispatch(
+      loginSuccess({
+        uid: res.uid,
+      })
+    );
+    localStorage.setItem("uid", JSON.stringify(res.uid));
     route.push("/"); // Redirect to home page after successful Google sign-in
   };
 

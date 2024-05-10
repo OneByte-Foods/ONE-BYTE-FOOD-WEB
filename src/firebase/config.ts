@@ -22,6 +22,9 @@ import {
 } from "firebase/firestore";
 import { cookies } from "next/headers";
 
+import { loginSuccess } from "../../redux/features/auth-slice";
+import { setUser } from "../../redux/features/users-slice";
+
 const firebaseConfig = {
   apiKey: "AIzaSyCBT_nA3MaVqdH0wejdtqlGAGuW0m6uXxg",
   authDomain: "one-bytes-backend.firebaseapp.com",
@@ -51,14 +54,8 @@ const signInWithGoogle = async () => {
     const res = await signInWithPopup(auth, googleProvider);
     const user = res.user;
 
-    // Save user information in local storage
-    localStorage.setItem("user", JSON.stringify(user));
-
     // Check if user document already exists in Firestore
-    const q = query(
-      collection(db, "users"),
-      where("uid", "==", user.uid)
-    );
+    const q = query(collection(db, "users"), where("uid", "==", user.uid));
     const docs = await getDocs(q);
 
     // If user document doesn't exist, add it to Firestore
@@ -71,6 +68,7 @@ const signInWithGoogle = async () => {
         roles: ["user"],
       });
     }
+    return user;
   } catch (err: any) {
     return err.message;
   }
@@ -90,8 +88,9 @@ const registerWithEmailAndPassword = async (
       username: name,
       imageUrl: `https://ui-avatars.com/api/?name=${name}`,
       uid: user.uid,
-      roles: ["user"]
+      roles: ["user"],
     });
+    return user;
   } catch (err: any) {
     return err.message;
   }
@@ -101,7 +100,7 @@ const logInWithEmailAndPassword = async (email: string, password: string) => {
   try {
     const res = await signInWithEmailAndPassword(auth, email, password);
     const user = res.user;
-    localStorage.setItem("user", JSON.stringify(user));
+    return user;
   } catch (err: any) {
     return err.message;
   }

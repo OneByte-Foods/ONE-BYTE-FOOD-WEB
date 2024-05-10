@@ -13,22 +13,24 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { FaUser } from "react-icons/fa";
 import { MdLocationPin } from "react-icons/md";
+import { useSelector } from "react-redux";
+import { RootState } from "redux/reducer";
 
 function Navbar() {
-  const [user, setUser] = useState<any>(null);
+  // const [user, setUser] = useState<any>(null);
+  const { uid } = useSelector((state: RootState) => state.auth);
 
   async function handleLogout() {
     logout();
-    localStorage.removeItem("user");
-    setUser(null);
+    // localStorage.removeItem("user")
   }
 
   useEffect(() => {
-    setUser(
-      localStorage.getItem("user")
-        ? JSON.parse(localStorage.getItem("user") || "{}")
-        : null
-    );
+    // setUser(
+    //   localStorage.getItem("user")
+    //     ? JSON.parse(localStorage.getItem("user") || "{}")
+    //     : null
+    // );
   }, []);
 
   return (
@@ -55,10 +57,10 @@ function Navbar() {
           </li>
         </ul>
       </nav>
-      {user ? (
+      {true ? (
         <DropdownMenu>
           <DropdownMenuTrigger className=" h-10 w-10 border rounded-full overflow-hidden">
-            {user && <img src={user.photoURL} />}
+            {/* {user && <img src={user.photoURL} />} */}
           </DropdownMenuTrigger>
           <DropdownMenuContent>
             <DropdownMenuLabel>My Account</DropdownMenuLabel>
