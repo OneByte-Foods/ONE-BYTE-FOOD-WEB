@@ -3,7 +3,7 @@
 import { logout } from "@/firebase/config";
 import { useEffect, useState } from "react";
 
-function page() {
+function Page() {
     const [user, setUser] = useState <any>([]);
     async function handleLogout() {
         logout();
@@ -39,4 +39,4 @@ function page() {
   )
 }
 
-export default page
+export default Page

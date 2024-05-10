@@ -9,13 +9,15 @@ import {
   signInWithPopup,
   signOut,
 } from "firebase/auth";
-import {getDatabase} from "firebase/database";
+import { getDatabase } from "firebase/database";
 import {
   addDoc,
   collection,
+  doc,
   getDocs,
   getFirestore,
   query,
+  setDoc,
   where,
 } from "firebase/firestore";
 import { cookies } from "next/headers";
@@ -23,7 +25,8 @@ import { cookies } from "next/headers";
 const firebaseConfig = {
   apiKey: "AIzaSyCBT_nA3MaVqdH0wejdtqlGAGuW0m6uXxg",
   authDomain: "one-bytes-backend.firebaseapp.com",
-  databaseURL: "https://one-bytes-backend-default-rtdb.asia-southeast1.firebasedatabase.app/",
+  databaseURL:
+    "https://one-bytes-backend-default-rtdb.asia-southeast1.firebasedatabase.app/",
   projectId: "one-bytes-backend",
   storageBucket: "one-bytes-backend.appspot.com",
   messagingSenderId: "971806294877",
@@ -47,25 +50,32 @@ const signInWithGoogle = async () => {
   try {
     const res = await signInWithPopup(auth, googleProvider);
     const user = res.user;
+
+    // Save user information in local storage
     localStorage.setItem("user", JSON.stringify(user));
+
+    // Check if user document already exists in Firestore
     const q = query(
-      collection(db, "Google_Account_Users"),
+      collection(db, "users"),
       where("uid", "==", user.uid)
     );
     const docs = await getDocs(q);
+
+    // If user document doesn't exist, add it to Firestore
     if (docs.docs.length === 0) {
-      await addDoc(collection(db, "Google_Account_Users"), {
-        uid: user.uid,
+      const userRef = doc(db, "users", user.uid);
+      await setDoc(userRef, {
         username: user.displayName,
         imageUrl: user.photoURL,
-        isAdmin: false,
         email: user.email,
+        roles: ["user"],
       });
     }
   } catch (err: any) {
     return err.message;
   }
 };
+
 const registerWithEmailAndPassword = async (
   name: string,
   email: string,
@@ -74,13 +84,13 @@ const registerWithEmailAndPassword = async (
   try {
     const res = await createUserWithEmailAndPassword(auth, email, password);
     const user = res.user;
-
-    await addDoc(collection(db, "Random_Signin_Users"), {
+    const userRef = doc(db, "users", user.uid);
+    await setDoc(userRef, {
       email: user.email,
       username: name,
-      isAdmin: false,
       imageUrl: `https://ui-avatars.com/api/?name=${name}`,
       uid: user.uid,
+      roles: ["user"]
     });
   } catch (err: any) {
     return err.message;

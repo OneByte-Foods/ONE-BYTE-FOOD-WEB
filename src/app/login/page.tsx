@@ -1,6 +1,6 @@
 import { Metadata } from "next";
 import Link from "next/link";
-import SingupBg from "../../../public/signup.jpg"
+import SingupBg from "../../../public/signup.jpg";
 
 import { UserAuthFormLogin } from "@/components/user-auth-form-login";
 import Image from "next/image";
@@ -12,28 +12,13 @@ export const metadata: Metadata = {
 
 export default function AuthenticationPage() {
   return (
-    <div className="flex min-h-screen w-full items-center justify-center">
-    <Image src={SingupBg} alt="food on background" fill={ true} />
-      <div className="w-[400px] flex flex-col gap-4 z-20">
+    <div className="flex min-h-screen w-full items-center justify-center bg-[#f7f6f6]">
+      <div className="w-[400px] items-center flex flex-col gap-4 z-20">
+        <h1 className="text-[#F17228] font-bold text-[50px]">
+          One Byte <span className="text-[#FFB30E]">Food</span>
+        </h1>
         <UserAuthFormLogin />
-        <p className="px-8 text-center text-sm">
-          By clicking continue, you agree to our{" "}
-          <Link
-            href="/terms"
-            className="underline underline-offset-4 hover:text-primary"
-          >
-            Terms of Service
-          </Link>{" "}
-          and{" "}
-          <Link
-            href="/privacy"
-            className="underline underline-offset-4 hover:text-primary"
-          >
-            Privacy Policy
-          </Link>
-        </p>
       </div>
     </div>
-    
   );
 }

@@ -10,16 +10,22 @@ import {
   signInWithGoogle,
 } from "@/firebase/config";
 import { useRouter } from "next/navigation";
-import { doc, getDoc } from "firebase/firestore";
-import { FaRegEye, FaRegEyeSlash, FaUser } from "react-icons/fa";
-import { FiMail } from "react-icons/fi";
-import { MdOutlineLockClock } from "react-icons/md";
 import Link from "next/link";
+
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 
 export function UserAuthFormLogin() {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
-  const [showPassword, setShowPassword] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string>("");
 
   const route = useRouter();
@@ -39,24 +45,6 @@ export function UserAuthFormLogin() {
 
     const res = await logInWithEmailAndPassword(email, password);
 
-    // const userDocRef = doc(db, "Random_SigninUsers", res?.user.uid || "");
-
-    // try {
-    //   const userDoc = await getDoc(userDocRef);
-    //   if (userDoc.exists()) {
-    //     if (userDoc.data().isAdmin) {
-    //       route.push("/daseboard");
-    //       return;
-    //     } else {
-    //       route.push("/");
-    //       return;
-    //     }
-    //   } else {
-    //     console.log("No such document!");
-    //   }
-    // } catch (error) {
-    //   console.error("Error getting user document:", error);
-    // }
     if (res) {
       setErrorMessage(res);
       return;
@@ -67,83 +55,53 @@ export function UserAuthFormLogin() {
     setPassword("");
   }
 
-  function handleShowPassword() {
-    setShowPassword(!showPassword);
-  }
-
   return (
-    <div className="p-[50px] w-[500px] bg-[#d6d6d600] rounded-2xl border border-[#222]">
-      <h2 className="text-2xl font-semibold text-center text-[30px] mb-[50px]">
-        <span className="text-[#F17228]">Login</span>
-      </h2>
-
-      <div className="flex flex-col mb-[38px]">
-        <div className="flex gap-5 py-[10px] items-center border-b-[1px] border-[#222] focus-within:border-[#F17228] text-[#222] focus-within:text-[#F17228]">
-          <FiMail className="text-[28px]" />
-          <input
-            id="email"
-            type="email"
-            placeholder="Email"
-            required={true}
-            className="w-full border-none outline-none focus:outline-none focus:border-none bg-transparent text-[22px] p-0 focus:text-[#222] "
-            onChange={(e) => setEmail(e.target.value)}
-          />
-        </div>
-        <div className="flex justify-between py-[10px] items-center border-b-[1px] border-[#222] focus-within:border-[#F17228] text-[#222] focus-within:text-[#F17228]">
-          <div className="flex gap-5 items-center">
-            <MdOutlineLockClock className="text-[28px]" />
-            <input
-              id="password"
-              type={showPassword ? "text" : "password"}
-              placeholder="Password"
-              className="w-full border-none outline-none bg-transparent text-[22px] p-0 focus:outline-none focus:border-none focus:text-[#222]"
-              onChange={(e) => setPassword(e.target.value)}
+    <Card className="mx-auto max-w-sm border-[#ff8c00] shadow-sm shadow-[#ff8c00]">
+      <CardHeader>
+        <CardTitle className="text-xl">Login</CardTitle>
+        <CardDescription>
+          Enter your information to create an account
+        </CardDescription>
+      </CardHeader>
+      <CardContent>
+        <div className="grid gap-4">
+          <div className="grid gap-2">
+            <Label htmlFor="email">Email</Label>
+            <Input
+              id="email"
+              type="email"
+              placeholder="m@example.com"
+              required
+              onChange={(e) => setEmail(e.target.value)}
             />
           </div>
-          {password && (
-            <div
-              onClick={handleShowPassword}
-              className="transition-all hover:bg-[#989898] flex items-center justify-center h-10 w-10 rounded-full cursor-pointer"
-            >
-              {showPassword ? (
-                <FaRegEye className="text-[22px] cursor-pointer" />
-              ) : (
-                <FaRegEyeSlash className="text-[22px] text-[#d1803d]" />
-              )}
-            </div>
-          )}
+          <div className="grid gap-2">
+            <Label htmlFor="password">Password</Label>
+            <Input
+              id="password"
+              type="password"
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+          </div>
+          {/* Display error message if any */}
+          <div className="flex items-center justify-between mt-5">
+            <p className="text-[#F17228] text-[16px]">{errorMessage}</p>
+          </div>
+          <Button type="submit" className="w-full" onClick={handleSubmit}>
+            Create an account
+          </Button>
+          <Button variant="outline" className="w-full" onClick={logGoogleUser}>
+            Sign up with Google
+          </Button>
         </div>
-
-        <div className="flex items-center justify-between mt-5">
-          <p className="text-[#F17228] text-[16px]">{errorMessage}</p>
-        </div>
-      </div>
-
-      <div className="flex flex-col gap-5">
-        <div className="flex justify-between">
-          <button
-            type="button"
-            className="transition-all bg-[#F17228] w-[190px] px-6 py-3 text-xl rounded-[20px]"
-            onClick={handleSubmit}
-          >
-            Login
-          </button>
-          <Link
-            href="/signup"
-            className="bg-transparent w-[190px] px-6 py-3 text-xl rounded-[20px] border border-[#F17228] text-center transition-all hover:bg-[#F17228] hover:border-[#F17228]"
-          >
-            Sign Up
+        <div className="mt-4 text-center text-sm">
+          Already have an account?{" "}
+          <Link href="#" className="underline">
+            Sign in
           </Link>
         </div>
-        <p className="text-center text-[22px]">Or</p>
-        <p className="text-center text-[22px] text-[#222] ">Login Using</p>
-        <div className="flex items-center justify-center gap-5">
-          <FcGoogle
-            className="text-[28px] cursor-pointer"
-            onClick={logGoogleUser}
-          />
-        </div>
-      </div>
-    </div>
+      </CardContent>
+    </Card>
   );
 }
