@@ -1,6 +1,12 @@
 "use client";
 import { db, realDb } from "@/firebase/config";
-import { collection, addDoc, Timestamp } from "firebase/firestore";
+import {
+  collection,
+  addDoc,
+  Timestamp,
+  doc,
+  updateDoc,
+} from "firebase/firestore";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -9,7 +15,6 @@ import { z } from "zod";
 
 const formSchema = z.object({
   foodName: z.string().min(2).max(50),
-  foodDescription: z.string().min(20),
   price: z.string().min(1),
   category: z.string().min(1),
   photo: z.string().url(),
@@ -37,29 +42,30 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { ref, update } from "firebase/database";
-import { useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 
 function UpdateMenu({
-  food_name,
-  description,
+  foodName,
   price,
   category,
   photo,
+  id,
   menuId,
+  setMenuItems,
 }: {
-  food_name: string;
-  description: string;
+  foodName: string;
   price: string;
   category: string;
   photo: string;
-  menuId: string;
+  id: string;
+    menuId: string;
+    setMenuItems: Dispatch<SetStateAction<any[]>>;
 }) {
   const [open, setOpen] = useState(false);
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      foodName: food_name,
-      foodDescription: description,
+      foodName: foodName,
       price: price,
       category: category,
       photo: photo,
@@ -67,18 +73,40 @@ function UpdateMenu({
   });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    const { foodName, foodDescription, category, price, photo } = values;
-    update(ref(realDb, `menu/${menuId}`), {
-      food_name: foodName,
-      description: foodDescription,
-      price: price,
-      is_available: true,
-      photo: photo,
-      category: category,
-    });
+    const { foodName, category, price, photo } = values;
 
-    setOpen(false);
-    form.reset();
+    try {
+      const menuRef = doc(db, "restaurants", id, "menu", menuId);
+      await updateDoc(menuRef, {
+        foodName: foodName,
+
+        foodPrice: parseInt(price),
+
+        foodPhoto: photo,
+        foodCategory: category,
+      });
+
+      setMenuItems((prev) =>
+        prev.map((item) => {
+          if (item.id === menuId) {
+            return {
+              ...item,
+              foodName,
+              foodPrice: parseInt(price),
+              foodPhoto: photo,
+              foodCategory: category,
+            };
+          }
+          return item;
+        })
+      );
+      
+      setOpen(false);
+      form.reset();
+    } catch (error) {
+      console.error("Error updating menu item: ", error);
+      // Handle error
+    }
   }
 
   return (
@@ -109,20 +137,7 @@ function UpdateMenu({
                     </FormItem>
                   )}
                 />
-                <FormField
-                  control={form.control}
-                  name="foodDescription"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Food Description</FormLabel>
-                      <FormControl>
-                        <Textarea placeholder="food description" {...field} />
-                      </FormControl>
-                      <FormDescription>description of the food</FormDescription>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+
                 <FormField
                   control={form.control}
                   name="photo"
@@ -160,7 +175,7 @@ function UpdateMenu({
                   name="category"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Number of Seats</FormLabel>
+                      <FormLabel>food category</FormLabel>
                       <FormControl>
                         <Input placeholder="food category" {...field} />
                       </FormControl>

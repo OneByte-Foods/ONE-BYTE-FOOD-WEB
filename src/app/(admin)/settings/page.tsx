@@ -1,12 +1,12 @@
 "use client";
 
-import { logout } from "@/firebase/config";
+import { logedout } from "@/firebase/config";
 import { useEffect, useState } from "react";
 
 function Page() {
     const [user, setUser] = useState <any>([]);
     async function handleLogout() {
-        logout();
+        logedout();
         localStorage.removeItem("user");
         setUser(null);
       }

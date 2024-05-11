@@ -8,7 +8,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-import { db, logout } from "@/firebase/config";
+import { db, logedout } from "@/firebase/config";
 import { doc, getDoc } from "firebase/firestore";
 import Link from "next/link";
 import { useEffect, useState } from "react";
@@ -18,24 +18,27 @@ import { useSelector } from "react-redux";
 import { setUser } from "../../../redux/features/users-slice";
 import { RootState } from "redux/reducer";
 import { useDispatch } from "react-redux";
+import { loginSuccess, logout } from "../../../redux/features/auth-slice";
 
 function Navbar() {
   // const [user, setUser] = useState<any>(null);
-  const { uid } = useSelector((state: RootState) => state.auth);
+  const { uid, isAuthenticated } = useSelector((state: RootState) => state.auth);
   const { username, roles, imageUrl } = useSelector(
     (state: RootState) => state.users
   );
   const dispatch = useDispatch();
 
   async function handleLogout() {
-    logout();
+    logedout();
     localStorage.removeItem("uid");
+    dispatch(logout());
   }
 
   useEffect(() => {
     const fetchUserData = async () => {
       if (uid) {
         try {
+          dispatch(loginSuccess({ uid }));
           const docRef = doc(db, "users", uid);
           const docSnap = await getDoc(docRef);
           if (docSnap.exists()) {
@@ -76,7 +79,7 @@ function Navbar() {
           </li>
         </ul>
       </nav>
-      {username ? (
+      {isAuthenticated ? (
         <DropdownMenu>
           <DropdownMenuTrigger className=" h-10 w-10 border rounded-full overflow-hidden">
             <img src={imageUrl} />

@@ -8,95 +8,89 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { realDb } from "@/firebase/config";
+import { db, realDb } from "@/firebase/config";
 import { onValue, push, ref, remove, set } from "firebase/database";
 import { useEffect, useState } from "react";
 import gsap from "gsap";
 import AddMenu from "@/components/menu/AddMenu";
 import UpdateMenu from "@/components/menu/UpdateMenu";
+import { collection, deleteDoc, doc, getDocs } from "firebase/firestore";
 
 function Page() {
-  const [menu, setMenu] = useState<any[]>([]);
-
-
+  const [menuItems, setMenuItems] = useState<any[]>([]);
 
   useEffect(() => {
-    const fetchData = () => {
-      const projectsRef = ref(realDb, "menu");
-      onValue(projectsRef, (snapshot) => {
-        setMenu([]);
-        const data = snapshot.val();
-        if (data !== null) {
-          // const projectsData = Object.values(data);
-          const dataArray = Object.keys(data).map((key) => ({
-            id: key,
-            ...data[key],
-          }));
-          setMenu(dataArray);
-        }
-      });
+    const fetchRestaurants = async () => {
+      try {
+        // Fetch menu items for the current restaurant
+        const menuSnapshot = await getDocs(
+          collection(db, "restaurants", "jimbu thakali 01", "menu")
+        );
+        const menuItems = menuSnapshot.docs.map((menuDoc) => ({
+          id: menuDoc.id,
+          ...menuDoc.data(),
+        }));
+        setMenuItems(menuItems);
+      } catch (error) {
+        console.error("Error fetching restaurants: ", error);
+      }
     };
-
-    fetchData();
+    fetchRestaurants();
   }, []);
-  console.log(menu);
-  useEffect(() => {
-    // Aniemate the added project
-    const addedProject = menu[menu.length - 1];
-    if (addedProject) {
-      gsap.from(
-        `#project-${addedProject.id}`,
+  console.log(menuItems);
 
-        { y: 30, opacity: 0, duration: 1, ease: "power3.out" }
-      );
+  async function handleDelete(id: string) {
+    try {
+      const menuRef = doc(db, "restaurants", "jimbu thakali 01", "menu", id);
+      await deleteDoc(menuRef);
+      setMenuItems((prev) => prev.filter((item) => item.id !== id));
+    } catch (error) {
+      console.error("Error deleting document: ", error);
+      // Handle error
     }
-  }, [menu]);
- 
-  function handleDelete(id:string) {
-    remove(ref(realDb, `menu/${id}`));
   }
 
   return (
     <>
       <div className=" space-y-4 p-6 pt-6">
-      <AddMenu />
-        <div className="grid gap-4 grid-cols-1 md:grid-cols-3 lg:grid-cols-7">
-          {menu.map((item) => (
-            <Card className="col-span-3 w-[350px]" key={item.id}>
-              <CardHeader className="">
-                <div className="h-[150px] w-full flex items-center justify-center">
+        <AddMenu id="jimbu thakali 01" setMenuItems={setMenuItems} />
+        <div className="md:px-[100px] px-5">
+          <h1 className="text-3xl font-bold mb-4">Menu</h1>
+          <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {menuItems.map((menuItem) => (
+              <div key={menuItem.id} className="flex flex-col gap-4">
+                <div className="bg-white rounded-lg shadow-md overflow-hidden flex flex-col">
                   <img
-                    src={item.photo}
-                    alt="food item photo"
-                    className="object-cover object-center h-[150px]"
+                    src={menuItem.foodPhoto}
+                    alt={menuItem.foodName}
+                    className="w-full h-32 object-cover"
                   />
-                </div>
-                <CardTitle>{item.food_name}</CardTitle>
-                <CardDescription className="transition-all duration-200">
-                  {item.description}
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="flex justify-between">
-                  <div className="flex items-center">
-                    <span className="text-gray-700">Price:</span>
-                    <span className="ml-2 font-semibold">Rs.{item.price}</span>
-                  </div>
-                  <div className="flex items-center">
-                    <span className="text-gray-700">Category:</span>
-                    <span className="ml-2 font-semibold">{item.category}</span>
+                  <div className="p-4">
+                    <h2 className="text-lg font-semibold">
+                      {menuItem.foodName}
+                    </h2>
+                    <p className="text-gray-600">
+                      Price: ${menuItem.foodPrice}
+                    </p>
                   </div>
                 </div>
-              </CardContent>
-              <CardFooter className="flex gap-4">
-                <UpdateMenu {...item} menuId={item.id} />
-                <Button variant="destructive" onClick={()=> handleDelete(item.id)}>Delete</Button>
-              </CardFooter>
-            </Card>
-          ))}
+                <UpdateMenu
+                  foodName={menuItem.foodName}
+                  category={menuItem.foodCategory}
+                  photo={menuItem.foodPhoto}
+                  price={menuItem.foodPrice}
+                  id={"jimbu thakali 01"}
+                  menuId={menuItem.id}
+                  setMenuItems={setMenuItems}
+                />
+                <Button onClick={() => handleDelete(menuItem.id)}>
+                  Delete
+                </Button>
+              </div>
+            ))}
+          </ul>
         </div>
       </div>
-      
     </>
   );
 }

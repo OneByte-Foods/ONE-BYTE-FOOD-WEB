@@ -115,7 +115,7 @@ const sendPasswordReset = async (email: string) => {
     alert(err.message);
   }
 };
-const logout = () => {
+const logedout = () => {
   signOut(auth);
 };
 
@@ -128,5 +128,5 @@ export {
   signInWithGoogle,
   logInWithEmailAndPassword,
   sendPasswordReset,
-  logout,
+  logedout,
 };
