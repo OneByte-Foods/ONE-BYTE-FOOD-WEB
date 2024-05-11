@@ -3,6 +3,7 @@ import Hero from "@/components/users/Hero";
 import Home from "@/components/users/Home";
 import Menu from "@/components/users/Menu";
 import Navbar from "@/components/users/Navbar";
+import Restaurant from "@/components/users/Restaurant";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -16,6 +17,7 @@ export default function AuthenticationPage() {
       <Navbar />
       {/* <Home /> */}
       <Hero />
+      <Restaurant />
       <Menu />
       <Footer />
     </>

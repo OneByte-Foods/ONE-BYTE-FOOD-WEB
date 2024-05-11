@@ -42,7 +42,7 @@ function Menu() {
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-14 md:gap-5 place-items-center">
             {menu.map((service) => (
-              <div className="rounded-2xl bg-white dark:bg-gray-800 hover:bg-yellow-500 hover:text-white relative shadow-xl duration-high group min-w-[400px]">
+              <div className="rounded-2xl bg-white dark:bg-gray-800 hover:bg-yellow-500 hover:text-white relative shadow-xl duration-high group min-w-[400px]" key={service.id}>
                 <div className="h-[100px]">
                   <img
                     src={service.photo}
