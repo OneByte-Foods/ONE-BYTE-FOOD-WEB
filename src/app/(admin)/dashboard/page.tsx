@@ -1,3 +1,5 @@
+"use client";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -5,8 +7,113 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-
+import { realDb } from "@/firebase/config";
+import { onValue, push, ref, set } from "firebase/database";
+import { useEffect, useState } from "react";
+import gsap from "gsap";
+import {
+  LineChart,
+  Line,
+  CartesianGrid,
+  XAxis,
+  YAxis,
+  Tooltip,
+} from "recharts";
 function Page() {
+  const [bookings, setBookings] = useState<any[]>([]);
+
+  const addDummyBooking = () => {
+    set(push(ref(realDb, "bookings")), {
+      id: 2,
+      name: "SMith",
+      email: "alex@gmail.com",
+    });
+  };
+
+  const data = [
+    {
+      name: "Page A",
+      uv: 4000,
+      pv: 2400,
+      amt: 2400,
+    },
+    {
+      name: "Page B",
+      uv: 3000,
+      pv: 1398,
+      amt: 2210,
+    },
+    {
+      name: "Page C",
+      uv: 2000,
+      pv: 9800,
+      amt: 2290,
+    },
+    {
+      name: "Page D",
+      uv: 2780,
+      pv: 3908,
+      amt: 2000,
+    },
+    {
+      name: "Page E",
+      uv: 1890,
+      pv: 4800,
+      amt: 2181,
+    },
+    {
+      name: "Page F",
+      uv: 2390,
+      pv: 3800,
+      amt: 2500,
+    },
+    {
+      name: "Page G",
+      uv: 3490,
+      pv: 4300,
+      amt: 2100,
+    },
+  ];
+
+  useEffect(() => {
+    const fetchData = () => {
+      const projectsRef = ref(realDb, "Bookings");
+      onValue(projectsRef, (snapshot) => {
+        setBookings([]);
+        const data = snapshot.val();
+        console.log(data);
+        if (data !== null) {
+          const dataArray: any = Object.keys(data.floorLevel1.users).map(
+            (key) => ({
+              id: key,
+              ...data.floorLevel1.users[key],
+            })
+          );
+          // console.log(dataArray);
+          // const usersArray = Object.keys(dataArray.users).map((userId) => ({
+          //   id: Math.random().toString(36).substr(2, 9), // generate random ID
+          //   ...dataArray.users[userId], // spread user details
+          // }));
+          setBookings(dataArray);
+        }
+      });
+    };
+
+    fetchData();
+  }, []);
+  console.log(bookings);
+
+  useEffect(() => {
+    // Animate the added project
+    // const addedProject = projects[projects.length - 1];
+    // if (addedProject) {
+    //   gsap.from(
+    //     `#project-${addedProject.id}`,
+    //     { y: 30, opacity: 0, duration: 1, ease: "power3.out" }
+    //   );
+    // }
+  }, []);
+
   return (
     <>
       <div className="flex-1 space-y-4 p-8 pt-6">
@@ -125,19 +232,58 @@ function Page() {
               <CardHeader>
                 <CardTitle>Overview</CardTitle>
               </CardHeader>
-              <CardContent className="pl-2">{/* <Overview /> */}</CardContent>
+              <CardContent className="pl-2">
+                <LineChart width={600} height={300} data={data}>
+                  <Line type="monotone" dataKey="uv" stroke="#8884d8" />
+                  <CartesianGrid stroke="#ccc" />
+                  <XAxis dataKey="name" />
+                  <YAxis />
+                  <Tooltip />
+                </LineChart>
+              </CardContent>
             </Card>
             <Card className="col-span-3">
               <CardHeader>
                 <CardTitle>Recent Tables Booking</CardTitle>
-                <CardDescription>
-                  You made 265 sales this month.
+                <CardDescription className="transition-all duration-200 flex flex-col gap-4 divide-y-2">
+                  {bookings.map((booking) => (
+                    <div
+                      key={booking.id}
+                      className="opacity-100"
+                      id={`project-${booking.id}`}
+                    >
+                      <div className="flex items-center justify-between">
+                        <div className="flex gap-4 items-center">
+                          <img
+                            src={booking.useProfilePic}
+                            alt="profile"
+                            className="w-10 h-10 rounded-full"
+                          />
+                          <div>
+                            <h1 className="text-xl font-bold">
+                              {booking.userName}
+                            </h1>
+                            <div className="text-sm font-semibold">
+                              {booking.userEmail}
+                            </div>
+                          </div>
+                        </div>
+                        <div>
+                          <h1 className="">Table Type: {booking.tableType}</h1>
+                          <div className="text-sm font-semibold">
+                            Seat No. {booking.seatNumber}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
                 </CardDescription>
               </CardHeader>
-              <CardContent>{/* <RecentSales /> */}</CardContent>
+              <CardContent></CardContent>
             </Card>
           </div>
         </div>
+        <Button onClick={addDummyBooking}>add book</Button>
       </div>
     </>
   );

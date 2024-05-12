@@ -1,91 +1,127 @@
 "use client";
 
-import { Button } from "./ui/button";
-import { Label } from "./ui/label";
-import { Input } from "./ui/input";
 import { useState } from "react";
-import { FcGoogle } from "react-icons/fc";
-import { useSignInWithEmailAndPassword } from "react-firebase-hooks/auth";
-import { auth } from "@/firebase/config";
+import { logInWithEmailAndPassword, signInWithGoogle } from "@/firebase/config";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
+
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { useDispatch } from "react-redux";
+import { loginSuccess } from "../../redux/features/auth-slice";
+import { setUser } from "../../redux/features/users-slice";
 
 export function UserAuthFormLogin() {
-  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
-  const [signInWithEmailAndPassword, user, error] = useSignInWithEmailAndPassword(auth);
+  const [errorMessage, setErrorMessage] = useState<string>("");
+  const dispatch = useDispatch();
+
   const route = useRouter();
 
-  async function onSubmit(event: React.SyntheticEvent) {
-   
-    event.preventDefault();
-    setIsLoading(true);
-    const res = await signInWithEmailAndPassword(email, password);
-  
-    if (res) {
-      localStorage.setItem("user", JSON.stringify(res.user));
-      route.push("/dashboard");
+  const logGoogleUser = async () => {
+    const res = await signInWithGoogle();
+    console.log(res);
+    if (typeof res == "string") {
+      setErrorMessage(res); // Set error message if Google sign-in fails
+      return;
     }
+    dispatch(
+      loginSuccess({
+        uid: res.uid,
+      })
+    );
+    localStorage.setItem("uid", JSON.stringify(res.uid));
+    route.push("/"); // Redirect to home page after successful Google sign-in
+  };
+
+  async function handleSubmit(event: React.SyntheticEvent) {
+    event.preventDefault();
+    setErrorMessage("");
+
+    const res = await logInWithEmailAndPassword(email, password);
+    console.log(res);
+
+    if (typeof res == "string") {
+      setErrorMessage(res);
+      return;
+    }
+
+    dispatch(
+      loginSuccess({
+        uid: res.uid,
+      })
+    );
+    dispatch(
+      setUser({
+        email: res.email,
+        imageUrl: `https://ui-avatars.com/api/?name=${res.username}`,
+        username: res.username,
+        roles: res.role,
+      })
+    );
+    localStorage.setItem("uid", JSON.stringify(res.uid));
+    route.push("/");
+
     setEmail("");
     setPassword("");
-    setIsLoading(false);
   }
-  
+
   return (
-    <div className="grid gap-4">
-      <form onSubmit={onSubmit}>
-        <div className="grid gap-2">
-          <div className="grid gap-3">
-            <Label className="sr-only" htmlFor="email">
-              Email
-            </Label>
+    <Card className="mx-auto max-w-sm border-[#ff8c00] shadow-sm shadow-[#ff8c00]">
+      <CardHeader>
+        <CardTitle className="text-xl">Login</CardTitle>
+        <CardDescription>
+          Enter your information to create an account
+        </CardDescription>
+      </CardHeader>
+      <CardContent>
+        <div className="grid gap-4">
+          <div className="grid gap-2">
+            <Label htmlFor="email">Email</Label>
             <Input
               id="email"
-              value={email}
-              placeholder="name@example.com"
               type="email"
-              autoCapitalize="none"
-              autoComplete="email"
-              autoCorrect="off"
-              disabled={isLoading}
+              placeholder="m@example.com"
+              required
               onChange={(e) => setEmail(e.target.value)}
             />
-            <Label className="sr-only" htmlFor="password">
-              password
-            </Label>
+          </div>
+          <div className="grid gap-2">
+            <Label htmlFor="password">Password</Label>
             <Input
               id="password"
-              value={password}
-              placeholder="password"
               type="password"
-              autoCapitalize="none"
-              autoComplete="on"
-              autoCorrect="off"
-              disabled={isLoading}
               onChange={(e) => setPassword(e.target.value)}
+              required
             />
           </div>
-          <Button disabled={isLoading}>Sign In with Email</Button>
+          {/* Display error message if any */}
+          <div className="flex items-center justify-between mt-5">
+            <p className="text-[#F17228] text-[16px]">{errorMessage}</p>
+          </div>
+          <Button type="submit" className="w-full" onClick={handleSubmit}>
+            Create an account
+          </Button>
+          <Button variant="outline" className="w-full" onClick={logGoogleUser}>
+            Sign up with Google
+          </Button>
         </div>
-      </form>
-      <div className="relative">
-        <div className="absolute inset-0 flex items-center">
-          <span className="w-full border-t" />
+        <div className="mt-4 text-center text-sm">
+          Already have an account?{" "}
+          <Link href="#" className="underline">
+            Sign in
+          </Link>
         </div>
-        <div className="relative flex justify-center text-xs uppercase">
-          <span className="bg-background px-2 text-muted-foreground">
-            Or continue with
-          </span>
-        </div>
-      </div>
-      <Button
-        variant="outline"
-        type="button"
-        disabled={isLoading}
-        className="flex items-center gap-2 text-xl"
-      >
-        <FcGoogle /> <span>Google</span>
-      </Button>
-    </div>
+      </CardContent>
+    </Card>
   );
 }

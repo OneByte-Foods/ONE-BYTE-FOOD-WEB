@@ -3,13 +3,12 @@ import Link from "next/link";
 import { MdOutlineTableBar } from "react-icons/md";
 import { IoRestaurantOutline } from "react-icons/io5";
 import { VscGraph } from "react-icons/vsc";
+import { MdOutlineBookmarkAdded } from "react-icons/md";
 import { GoGear } from "react-icons/go";
 import { usePathname } from "next/navigation";
 
 function Navigation() {
   const path = usePathname();
-  // const user = JSON.parse(localStorage.getItem("user") || "{}");
-  // console.log(user);
   return (
     <nav className="w-[250px] min-screen borderp py-3 px-6 flex flex-col gap-10 border">
       <div className="">
@@ -42,7 +41,16 @@ function Navigation() {
             <span className="text-sm">Tables</span>
           </Link>
           <Link
-            href="/tables"
+            href="/bookings"
+            className={`flex items-end gap-2 px-5 py-3 rounded-2xl ${
+              path == "/bookings" ? "bg-[#c1bcbc74]" : ""
+            }`}
+          >
+            <MdOutlineBookmarkAdded size={25} />
+            <span className="text-sm">Bookings</span>
+          </Link>
+          <Link
+            href="/menu"
             className={`flex items-end gap-2 px-5 py-3 rounded-2xl ${
               path == "/menu" ? "bg-[#c1bcbc74]" : ""
             }`}

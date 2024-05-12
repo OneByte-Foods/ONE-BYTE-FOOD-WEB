@@ -10,6 +10,8 @@ import { z } from "zod";
 const formSchema = z.object({
   tableName: z.string().min(2).max(50),
   tableDescription: z.string().min(20),
+  tableNumber: z.string().min(1),
+  numberOfSeats: z.string().min(1),
   // tableAvailibility: z
 });
 
@@ -41,15 +43,19 @@ function AddTable() {
     defaultValues: {
       tableName: "",
       tableDescription: "",
+      tableNumber: "",
+      numberOfSeats: "",
     },
   });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    const { tableName, tableDescription } = values;
+    const { tableName, tableDescription, tableNumber, numberOfSeats } = values;
     try {
-      await addDoc(collection(db, "tasks"), {
+      await addDoc(collection(db, "table"), {
         tableName,
         tableDescription,
+        tableNumber,
+        numberOfSeats: parseInt(numberOfSeats),
         created: Timestamp.now(),
       });
       //   onClose()
@@ -60,7 +66,9 @@ function AddTable() {
 
   return (
     <Dialog>
-      <DialogTrigger className="bg-black text-white px-4 py-2">Add Table</DialogTrigger>
+      <DialogTrigger className="bg-black text-white px-4 py-2">
+        Add Table
+      </DialogTrigger>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Add Table</DialogTitle>
@@ -95,6 +103,38 @@ function AddTable() {
                       </FormControl>
                       <FormDescription>
                         a sweet description for your table
+                      </FormDescription>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="tableNumber"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Table Number</FormLabel>
+                      <FormControl>
+                        <Input type="number" placeholder="table number" {...field} />
+                      </FormControl>
+                      <FormDescription>
+                        a sweet description for your table
+                      </FormDescription>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="numberOfSeats"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Number of Seats</FormLabel>
+                      <FormControl>
+                        <Input type="number" placeholder="number of seats" {...field} />
+                      </FormControl>
+                      <FormDescription>
+                        total number of seats
                       </FormDescription>
                       <FormMessage />
                     </FormItem>
