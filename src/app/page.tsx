@@ -1,6 +1,6 @@
+import Faq from "@/components/Faq";
 import Footer from "@/components/users/Footer";
 import Hero from "@/components/users/Hero";
-import Home from "@/components/users/Home";
 import Menu from "@/components/users/Menu";
 import Navbar from "@/components/users/Navbar";
 import Restaurant from "@/components/users/Restaurant";
@@ -19,6 +19,7 @@ export default function AuthenticationPage() {
       <Hero />
       <Restaurant />
       <Menu />
+      <Faq/>
       <Footer />
     </>
   );
