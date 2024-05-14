@@ -65,6 +65,7 @@ function Page() {
       const userRef = doc(db, "users", uid);
       await updateDoc(userRef, {
         roles: arrayUnion("admin"),
+        restaurantId: restaurantName,
       });
 
       route.push("/"); // Redirect to home page after successful restaurant registration

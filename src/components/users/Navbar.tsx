@@ -22,7 +22,9 @@ import { loginSuccess, logout } from "../../../redux/features/auth-slice";
 
 function Navbar() {
   // const [user, setUser] = useState<any>(null);
-  const { uid, isAuthenticated } = useSelector((state: RootState) => state.auth);
+  const { uid, isAuthenticated } = useSelector(
+    (state: RootState) => state.auth
+  );
   const { username, roles, imageUrl } = useSelector(
     (state: RootState) => state.users
   );
@@ -56,6 +58,7 @@ function Navbar() {
 
     fetchUserData();
   }, [uid, dispatch]);
+  console.log(roles);
 
   return (
     <header className="flex h-[10vh] px-[5%] md:px-[10%] items-center justify-between">
@@ -65,13 +68,12 @@ function Navbar() {
         </h1>
         <span className="text-[10px] flex items-center gap-2">
           managaing restaurnat
-         
         </span>
       </div>
       <nav className="flex flex-col gap-1">
         <ul className="flex gap-4 font-bold items-center">
           <li>
-            {roles.includes("admin") ? (
+            {roles.includes("admin") || roles.includes("super_admin") ? (
               <Link href="/dashboard">Manage Restaurant</Link>
             ) : (
               <Link href="/register">Register Restaurant</Link>

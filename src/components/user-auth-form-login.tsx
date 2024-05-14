@@ -66,6 +66,7 @@ export function UserAuthFormLogin() {
         imageUrl: `https://ui-avatars.com/api/?name=${res.username}`,
         username: res.username,
         roles: res.role,
+        restaurantId: res.restaurantId,
       })
     );
     localStorage.setItem("uid", JSON.stringify(res.uid));

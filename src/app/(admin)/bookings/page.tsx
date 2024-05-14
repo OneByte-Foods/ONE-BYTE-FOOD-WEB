@@ -53,7 +53,7 @@ function Page() {
 
   return (
     <div className="flex w-screen h-screen items-center">
-      <HomeBurger />
+      {/* <HomeBurger /> */}
       <div className="h-screen py-5 w-[60%] border no-scrollbar px-10 overflow-y-auto">
         <Timeline id="timeline" className=" h-fit border-l-2">
           {bookings.map((item) => (

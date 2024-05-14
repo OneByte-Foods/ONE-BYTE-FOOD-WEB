@@ -15,16 +15,20 @@ import gsap from "gsap";
 import AddMenu from "@/components/menu/AddMenu";
 import UpdateMenu from "@/components/menu/UpdateMenu";
 import { collection, deleteDoc, doc, getDocs } from "firebase/firestore";
+import { useSelect } from "@react-three/drei";
+import { useSelector } from "react-redux";
+import { RootState } from "redux/reducer";
 
 function Page() {
   const [menuItems, setMenuItems] = useState<any[]>([]);
+  const {restaurantId} = useSelector((state: RootState) => state.users);
 
   useEffect(() => {
     const fetchRestaurants = async () => {
       try {
         // Fetch menu items for the current restaurant
         const menuSnapshot = await getDocs(
-          collection(db, "restaurants", "jimbu thakali 01", "menu")
+          collection(db, "restaurants", restaurantId, "menu")
         );
         const menuItems = menuSnapshot.docs.map((menuDoc) => ({
           id: menuDoc.id,
@@ -35,13 +39,15 @@ function Page() {
         console.error("Error fetching restaurants: ", error);
       }
     };
+    if (!restaurantId) return;
     fetchRestaurants();
-  }, []);
+  }, [restaurantId]);
   console.log(menuItems);
+  console.log(restaurantId)
 
   async function handleDelete(id: string) {
     try {
-      const menuRef = doc(db, "restaurants", "jimbu thakali 01", "menu", id);
+      const menuRef = doc(db, "restaurants", restaurantId, "menu", id);
       await deleteDoc(menuRef);
       setMenuItems((prev) => prev.filter((item) => item.id !== id));
     } catch (error) {
@@ -79,7 +85,7 @@ function Page() {
                   category={menuItem.foodCategory}
                   photo={menuItem.foodPhoto}
                   price={menuItem.foodPrice}
-                  id={"jimbu thakali 01"}
+                  id={restaurantId}
                   menuId={menuItem.id}
                   setMenuItems={setMenuItems}
                 />

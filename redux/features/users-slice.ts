@@ -7,6 +7,7 @@ interface User {
   username: string;
   email: string;
   roles: string[];
+  restaurantId: string;
 }
 const initialState: User = {
   
@@ -14,6 +15,7 @@ const initialState: User = {
   email: "",
   username: "",
   roles: [],
+  restaurantId: "",
 };
 
 export const userSlice = createSlice({
@@ -25,12 +27,14 @@ export const userSlice = createSlice({
       state.imageUrl = action.payload.imageUrl;
       state.username = action.payload.username;
       state.roles = action.payload.roles;
+      state.restaurantId = action.payload.restaurantId;
     },
     removeUser: (state) => {
       state.email = "";
       state.imageUrl = "";
       state.username = "";
       state.roles = [];
+      restaurantId: "";
     },
   },
 });

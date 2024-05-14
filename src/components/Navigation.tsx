@@ -6,9 +6,14 @@ import { VscGraph } from "react-icons/vsc";
 import { MdOutlineBookmarkAdded } from "react-icons/md";
 import { GoGear } from "react-icons/go";
 import { usePathname } from "next/navigation";
+import { useSelector } from "react-redux";
+import { RootState } from "redux/reducer";
 
 function Navigation() {
   const path = usePathname();
+  const { roles } = useSelector((state: RootState) => state.users);
+  const { uid } = useSelector((state: RootState) => state.auth);
+
   return (
     <nav className="w-[250px] min-screen borderp py-3 px-6 flex flex-col gap-10 border">
       <div className="">
@@ -58,6 +63,17 @@ function Navigation() {
             <IoRestaurantOutline size={25} />
             <span className="text-sm">Menu</span>
           </Link>
+          {roles.includes("admin") && (
+            <Link
+              href="/users"
+              className={`flex items-end gap-2 px-5 py-3 rounded-2xl ${
+                path == "/users" ? "bg-[#c1bcbc74]" : ""
+              }`}
+            >
+              <IoRestaurantOutline size={25} />
+              <span className="text-sm">Users</span>
+            </Link>
+          )}
         </div>
       </div>
       <div className="flex flex-col gap-6">
