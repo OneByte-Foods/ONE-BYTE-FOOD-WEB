@@ -4,6 +4,7 @@ import { MdOutlineTableBar } from "react-icons/md";
 import { IoRestaurantOutline } from "react-icons/io5";
 import { VscGraph } from "react-icons/vsc";
 import { MdOutlineBookmarkAdded } from "react-icons/md";
+import { FaRegUser } from "react-icons/fa";
 import { GoGear } from "react-icons/go";
 import { usePathname } from "next/navigation";
 import { useSelector } from "react-redux";
@@ -15,17 +16,19 @@ function Navigation() {
   const { uid } = useSelector((state: RootState) => state.auth);
 
   return (
-    <nav className="w-[250px] min-screen borderp py-3 px-6 flex flex-col gap-10 border">
+    <nav className="w-[250px] min-screen borderp py-3 px-6 flex flex-col gap-10 bg-[#f2f2f2]">
       <div className="">
-        <h1 className="text-xl">One Byte Food</h1>
+        <h1 className="text-xl font-bold ml-5 text-[#17BEBB]">
+          One Byte <span className="">Food</span>
+        </h1>
       </div>
       <div className="flex flex-col gap-6">
-        <h1 className="text-xl font-bold ml-5">Activity</h1>
+        <h1 className="text-xl font-bold ml-5 text-[#17BEBB]">Activity</h1>
         <div className="flex flex-col gap-6">
           <Link
             href="/dashboard"
             className={`flex items-end gap-2 px-5 py-3 rounded-2xl ${
-              path == "/dashboard" ? "bg-[#c1bcbc74]" : ""
+              path == "/dashboard" ? "bg-[#17BEBB] text-white"  : ""
             }`}
           >
             <VscGraph size={25} />
@@ -34,12 +37,12 @@ function Navigation() {
         </div>
       </div>
       <div className="flex flex-col gap-6">
-        <h1 className="text-xl font-bold ml-5">Manage</h1>
+        <h1 className="text-xl font-bold ml-5 text-[#17BEBB]">Manage</h1>
         <div className="flex flex-col gap-6">
           <Link
             href="/tables"
             className={`flex items-end gap-2 px-5 py-3 rounded-2xl ${
-              path == "/tables" ? "bg-[#c1bcbc74]" : ""
+              path == "/tables" ? "bg-[#17BEBB] text-white" : ""
             }`}
           >
             <MdOutlineTableBar size={25} />
@@ -48,7 +51,7 @@ function Navigation() {
           <Link
             href="/bookings"
             className={`flex items-end gap-2 px-5 py-3 rounded-2xl ${
-              path == "/bookings" ? "bg-[#c1bcbc74]" : ""
+              path == "/bookings" ? "bg-[#17BEBB] text-white"  : ""
             }`}
           >
             <MdOutlineBookmarkAdded size={25} />
@@ -57,7 +60,7 @@ function Navigation() {
           <Link
             href="/menu"
             className={`flex items-end gap-2 px-5 py-3 rounded-2xl ${
-              path == "/menu" ? "bg-[#c1bcbc74]" : ""
+              path == "/menu" ? "bg-[#17BEBB] text-white"  : ""
             }`}
           >
             <IoRestaurantOutline size={25} />
@@ -67,22 +70,22 @@ function Navigation() {
             <Link
               href="/users"
               className={`flex items-end gap-2 px-5 py-3 rounded-2xl ${
-                path == "/users" ? "bg-[#c1bcbc74]" : ""
+                path == "/users" ? "bg-[#17BEBB] text-white"  : ""
               }`}
             >
-              <IoRestaurantOutline size={25} />
+              <FaRegUser size={25} />
               <span className="text-sm">Users</span>
             </Link>
           )}
         </div>
       </div>
       <div className="flex flex-col gap-6">
-        <h1 className="text-xl font-bold ml-5">Profile</h1>
+        <h1 className="text-xl font-bold ml-5 text-[#17BEBB]">Profile</h1>
         <div className="flex flex-col gap-6">
           <Link
             href="/settings"
             className={`flex items-end gap-2 px-5 py-3 rounded-2xl ${
-              path == "/settings" ? "bg-[#c1bcbc74]" : ""
+              path == "/settings" ? "bg-[#17BEBB] text-white"  : ""
             }`}
           >
             <GoGear size={25} />

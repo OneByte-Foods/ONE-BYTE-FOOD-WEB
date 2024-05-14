@@ -123,7 +123,7 @@ function Page() {
 
         <div className="space-y-4">
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-            <Card>
+            {/* <Card className="bg-[purple]">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium">
                   Total Revenue
@@ -147,11 +147,11 @@ function Page() {
                   +20.1% from last month
                 </p>
               </CardContent>
-            </Card>
-            <Card>
+            </Card> */}
+            <Card className="bg-[#17BEBE] text-[#e5e5e5] col-span-2">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">
-                  Tables Booking
+                <CardTitle className="text-2xl font-medium">
+                  Total Tables Booking
                 </CardTitle>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -169,13 +169,11 @@ function Page() {
                 </svg>
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">+188</div>
-                <p className="text-xs text-muted-foreground">
-                  +180.1% from last month
-                </p>
+                <div className="text-2xl font-bold">+{bookings.length}</div>
               </CardContent>
             </Card>
-            <Card>
+
+            <Card className="bg-[#9117be] text-[#e5e5e5]">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium">
                   Active Tables
@@ -196,12 +194,9 @@ function Page() {
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">19 / 50</div>
-                <p className="text-xs text-muted-foreground">
-                  29 tables available
-                </p>
               </CardContent>
             </Card>
-            <Card>
+            <Card className="bg-[#be4617] text-[#e5e5e5]">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium">
                   Active Now
@@ -221,67 +216,64 @@ function Page() {
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">+573</div>
-                <p className="text-xs text-muted-foreground">
-                  +201 since last hour
-                </p>
               </CardContent>
             </Card>
           </div>
-          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
-            <Card className="col-span-4">
-              <CardHeader>
-                <CardTitle>Overview</CardTitle>
-              </CardHeader>
-              <CardContent className="pl-2">
-                <LineChart width={600} height={300} data={data}>
-                  <Line type="monotone" dataKey="uv" stroke="#8884d8" />
-                  <CartesianGrid stroke="#ccc" />
-                  <XAxis dataKey="name" />
-                  <YAxis />
-                  <Tooltip />
-                </LineChart>
-              </CardContent>
-            </Card>
-            <Card className="col-span-3">
-              <CardHeader>
-                <CardTitle>Recent Tables Booking</CardTitle>
-                <CardDescription className="transition-all duration-200 flex flex-col gap-4 divide-y-2">
-                  {bookings.map((booking) => (
-                    <div
-                      key={booking.id}
-                      className="opacity-100"
-                      id={`project-${booking.id}`}
-                    >
-                      <div className="flex items-center justify-between">
-                        <div className="flex gap-4 items-center">
-                          <img
-                            src={booking.useProfilePic}
-                            alt="profile"
-                            className="w-10 h-10 rounded-full"
-                          />
-                          <div>
-                            <h1 className="text-xl font-bold">
-                              {booking.userName}
-                            </h1>
-                            <div className="text-sm font-semibold">
-                              {booking.userEmail}
-                            </div>
-                          </div>
-                        </div>
+        </div>
+        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
+          <Card className="col-span-4">
+            <CardHeader>
+              <CardTitle>Overview</CardTitle>
+            </CardHeader>
+            <CardContent className="pl-2">
+              <LineChart width={600} height={300} data={data}>
+                <Line type="monotone" dataKey="uv" stroke="#8884d8" />
+                <CartesianGrid stroke="#ccc" />
+                <XAxis dataKey="name" />
+                <YAxis />
+                <Tooltip />
+              </LineChart>
+            </CardContent>
+          </Card>
+          <Card className="col-span-3">
+            <CardHeader>
+              <CardTitle>Recent Tables Booking</CardTitle>
+              <CardDescription className="transition-all duration-200 flex flex-col gap-4 divide-y-2">
+                {bookings.map((booking) => (
+                  <div
+                    key={booking.id}
+                    className="opacity-100"
+                    id={`project-${booking.id}`}
+                  >
+                    <div className="flex items-center justify-between">
+                      <div className="flex gap-4 items-center">
+                        <img
+                          src={booking.useProfilePic}
+                          alt="profile"
+                          className="w-10 h-10 rounded-full"
+                        />
                         <div>
-                          <h1 className="">Table Type: {booking.tableType}</h1>
+                          <h1 className="text-xl font-bold">
+                            {booking.userName}
+                          </h1>
                           <div className="text-sm font-semibold">
-                            Seat No. {booking.seatNumber}
+                            {booking.userEmail}
                           </div>
                         </div>
                       </div>
+                      <div>
+                        <h1 className="">Table Type: {booking.tableType}</h1>
+                        <div className="text-sm font-semibold">
+                          Seat No. {booking.seatNumber}
+                        </div>
+                      </div>
                     </div>
-                  ))}
-                </CardDescription>
-              </CardHeader>
-              <CardContent></CardContent>
-            </Card>
-          </div>
+                  </div>
+                ))}
+              </CardDescription>
+            </CardHeader>
+            <CardContent></CardContent>
+          </Card>
         </div>
         <Button onClick={addDummyBooking}>add book</Button>
       </div>
