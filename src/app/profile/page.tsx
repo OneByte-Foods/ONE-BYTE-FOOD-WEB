@@ -7,7 +7,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../../../redux/features/auth-slice";
 import { RootState } from "redux/reducer";
 
-const page = () => {
+const Page = () => {
   const { username, email, imageUrl, restaurantId } = useSelector(
     (state: RootState) => state.users
   );
@@ -55,4 +55,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;
