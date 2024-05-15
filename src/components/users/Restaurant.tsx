@@ -34,8 +34,15 @@ function Restaurant() {
           {restaurants.map((restaurant) => (
             <Link href={`/restaurants/${restaurant.restaurantName}`}
               key={restaurant.restaurantName}
-              className="bg-white shadow-md rounded-lg overflow-hidden"
+              className={`bg-white shadow-md rounded-lg overflow-hidden ${!restaurant.isVerified && "opacity-50 relative"}`}
             >
+              {
+                !restaurant.isVerified && (
+                  <span className="absolute top-0 right-0 bg-red-500 text-white px-2 py-1 text-xs font-bold">
+                    Comming Soon
+                  </span>
+                )
+              }
               <img
                 src={restaurant.restaurantImage}
                 alt={restaurant.restaurantName}

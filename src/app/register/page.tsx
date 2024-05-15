@@ -59,6 +59,7 @@ function Page() {
         restaurantLocation: restaurantLocation,
         restaurantImage: restaurantImage,
         adminId: uid,
+        isVerified: false,
         staffId: [],
       });
       // Update the user's role to "admin"
