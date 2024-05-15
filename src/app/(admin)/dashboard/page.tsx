@@ -19,8 +19,12 @@ import {
   YAxis,
   Tooltip,
 } from "recharts";
+import { useSelector } from "react-redux";
+import { RootState } from "redux/reducer";
+import Link from "next/link";
 function Page() {
   const [bookings, setBookings] = useState<any[]>([]);
+  const { restaurantId } = useSelector((state: RootState) => state.users);
 
   const addDummyBooking = () => {
     set(push(ref(realDb, "bookings")), {
@@ -30,54 +34,9 @@ function Page() {
     });
   };
 
-  const data = [
-    {
-      name: "Page A",
-      uv: 4000,
-      pv: 2400,
-      amt: 2400,
-    },
-    {
-      name: "Page B",
-      uv: 3000,
-      pv: 1398,
-      amt: 2210,
-    },
-    {
-      name: "Page C",
-      uv: 2000,
-      pv: 9800,
-      amt: 2290,
-    },
-    {
-      name: "Page D",
-      uv: 2780,
-      pv: 3908,
-      amt: 2000,
-    },
-    {
-      name: "Page E",
-      uv: 1890,
-      pv: 4800,
-      amt: 2181,
-    },
-    {
-      name: "Page F",
-      uv: 2390,
-      pv: 3800,
-      amt: 2500,
-    },
-    {
-      name: "Page G",
-      uv: 3490,
-      pv: 4300,
-      amt: 2100,
-    },
-  ];
-
   useEffect(() => {
     const fetchData = () => {
-      const projectsRef = ref(realDb, "Bookings");
+      const projectsRef = ref(realDb, "Bookings/" + restaurantId);
       onValue(projectsRef, (snapshot) => {
         setBookings([]);
         const data = snapshot.val();
@@ -123,31 +82,6 @@ function Page() {
 
         <div className="space-y-4">
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-            {/* <Card className="bg-[purple]">
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">
-                  Total Revenue
-                </CardTitle>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  className="h-4 w-4 text-muted-foreground"
-                >
-                  <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
-                </svg>
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold">$45,231.89</div>
-                <p className="text-xs text-muted-foreground">
-                  +20.1% from last month
-                </p>
-              </CardContent>
-            </Card> */}
             <Card className="bg-[#17BEBE] text-[#e5e5e5] col-span-2">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-2xl font-medium">
@@ -221,61 +155,79 @@ function Page() {
           </div>
         </div>
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
-          <Card className="col-span-4">
+          <Card className="col-span-4 h-[70vh]">
             <CardHeader>
-              <CardTitle>Overview</CardTitle>
+              <CardTitle>Quick Links</CardTitle>
             </CardHeader>
-            <CardContent className="pl-2">
-              <LineChart width={600} height={300} data={data}>
-                <Line type="monotone" dataKey="uv" stroke="#8884d8" />
-                <CartesianGrid stroke="#ccc" />
-                <XAxis dataKey="name" />
-                <YAxis />
-                <Tooltip />
-              </LineChart>
+            <CardContent className="pl-2 grid grid-cols-2 items-center gap-6">
+              <Link
+                href="/tables"
+                className="bg-[#17BEBE] rounded-md text-[#e5e5e5] flex items-center justify-center h-[200px]"
+              >
+                Tables
+              </Link>
+              <Link
+                href="/bookings"
+                className="bg-[#9117be] rounded-md text-[#e5e5e5] flex items-center justify-center h-[200px]"
+              >
+                Bookings
+              </Link>
+              <Link
+                href="/menu"
+                className="bg-[#17be30] rounded-md text-[#e5e5e5] flex items-center justify-center h-[200px]"
+              >
+                Menu
+              </Link>
+              <Link
+                href="/settings"
+                className="bg-[#be4617] rounded-md text-[#e5e5e5] flex items-center justify-center h-[200px]"
+              >
+                Settings
+              </Link>
             </CardContent>
           </Card>
           <Card className="col-span-3">
             <CardHeader>
               <CardTitle>Recent Tables Booking</CardTitle>
               <CardDescription className="transition-all duration-200 flex flex-col gap-4 divide-y-2">
-                {bookings.map((booking) => (
-                  <div
-                    key={booking.id}
-                    className="opacity-100"
-                    id={`project-${booking.id}`}
-                  >
-                    <div className="flex items-center justify-between">
-                      <div className="flex gap-4 items-center">
-                        <img
-                          src={booking.useProfilePic}
-                          alt="profile"
-                          className="w-10 h-10 rounded-full"
-                        />
+                {bookings
+                  .filter((_, index) => index > bookings.length - 7)
+                  .map((booking) => (
+                    <div
+                      key={booking.id}
+                      className="opacity-100"
+                      id={`project-${booking.id}`}
+                    >
+                      <div className="flex items-center justify-between">
+                        <div className="flex gap-4 items-center">
+                          <img
+                            src={booking.userProfilePic}
+                            alt="profile"
+                            className="w-10 h-10 rounded-full"
+                          />
+                          <div>
+                            <h1 className="text-xl font-bold">
+                              {booking.userName}
+                            </h1>
+                            <div className="text-sm font-semibold">
+                              {booking.userEmail}
+                            </div>
+                          </div>
+                        </div>
                         <div>
-                          <h1 className="text-xl font-bold">
-                            {booking.userName}
-                          </h1>
+                          <h1 className="">Table Type: {booking.tableType}</h1>
                           <div className="text-sm font-semibold">
-                            {booking.userEmail}
+                            Seat No. {booking.seatNumber}
                           </div>
                         </div>
                       </div>
-                      <div>
-                        <h1 className="">Table Type: {booking.tableType}</h1>
-                        <div className="text-sm font-semibold">
-                          Seat No. {booking.seatNumber}
-                        </div>
-                      </div>
                     </div>
-                  </div>
-                ))}
+                  ))}
               </CardDescription>
             </CardHeader>
             <CardContent></CardContent>
           </Card>
         </div>
-        <Button onClick={addDummyBooking}>add book</Button>
       </div>
     </>
   );
