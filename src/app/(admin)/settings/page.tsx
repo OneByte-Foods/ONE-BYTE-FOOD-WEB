@@ -1,42 +1,49 @@
 "use client";
 
 import { logedout } from "@/firebase/config";
-import { useEffect, useState } from "react";
 
-function Page() {
-    const [user, setUser] = useState <any>([]);
-    async function handleLogout() {
-        logedout();
-        localStorage.removeItem("user");
-        setUser(null);
-      }
-    
-      useEffect(() => {
-        setUser(
-          localStorage.getItem("user")
-            ? JSON.parse(localStorage.getItem("user") || "{}")
-            : null
-        );
-      }, []);
+import Link from "next/link";
+import { useDispatch, useSelector } from "react-redux";
+import { logout } from "../../../../redux/features/auth-slice";
+
+import { RootState } from "redux/reducer";
+
+const page = () => {
+  const { username, email, imageUrl, restaurantId } = useSelector(
+    (state: RootState) => state.users
+  );
+
+  const dispatch = useDispatch();
+  async function handleLogout() {
+    logedout();
+    localStorage.removeItem("uid");
+    dispatch(logout());
+    window.location.href = "/";
+  }
+
   return (
-      <section className="grid grid-cols-2 md:px-24 px-6 py-4">
-          {
-              user ?
-              <>
-                  <img src={user.photoURL} alt="user photo" className="w-[400px]"/>
-                  <div className="flex flex-col gap-4">
-                        <h1 >Name: <span className="text-2xl font-bold">{user.displayName}</span></h1>
-                        <p>Email: <span className="text-2xl font-bold">{user.email}</span></p>
-                  </div>
-                <button onClick={handleLogout} className="bg-black text-white h-10 w-20 flex items-center justify-center">Logout</button>
-                  </>
-                  :
-                  <h1>Not logged in</h1>
-              
-          
-            }
-    </section>
-  )
-}
+    <>
+      <section className="flex w-full items-center justify-center gap-10 min-h-[70vh]">
+        <div className="flex flex-col border border-black px-6 py-4 items-center gap-8">
+          <img
+            src={imageUrl}
+            alt="user photo"
+            className="w-[100px] rounded-full"
+          />
+          <div className="flex flex-col gap-4 items-center">
+            <h1 className="text-2xl ">{username}</h1>
+            <p>{email}</p>
+          </div>
+          <div
+            onClick={handleLogout}
+            className="cursor-pointer hover:underline"
+          >
+            logout
+          </div>
+        </div>
+      </section>
+    </>
+  );
+};
 
-export default Page
+export default page;
