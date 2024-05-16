@@ -7,6 +7,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { realDb } from "@/firebase/config";
+import { Piedata, Pieoptions, data, dataBar, dataCombo, options, optionsBar, optionsCombo } from "@/utils/utils";
 import { onValue, push, ref, set } from "firebase/database";
 import Link from "next/link";
 import { useEffect, useState } from "react";
@@ -14,60 +15,6 @@ import { Chart } from "react-google-charts";
 import { useSelector } from "react-redux";
 import { RootState } from "redux/reducer";
 
-const data = [
-  ["Number of Votes", "Average Cost for Two"],
-  [105, 250],
-  [105, 250],
-  [105, 450],
-  [105, 550],
-  [105, 750],
-  [200, 300],
-  [45, 150],
-  [60, 200],
-  [150, 350],
-  [85, 220],
-  [120, 270],
-  [90, 180],
-  [110, 230],
-  [80, 190],
-];
-
-const Piedata = [
-  ["Task", "Hours per Day"],
-  ["Work", 11],
-  ["Eat", 2],
-  ["Commute", 2],
-  ["Watch TV", 2],
-  ["Sleep", 7],
-];
-
-const options = {
-  title: "Number of Votes vs Average Cost for Two",
-  hAxis: {
-    title: "Number of Votes",
-    minValue: 0,
-  },
-  vAxis: {
-    title: "Average Cost for Two (in USD)",
-  },
-  legend: { position: "top", alignment: "center" },
-  colors: ["#76A789"], // corrected the color code
-  animation: {
-    duration: 1000,
-    easing: "out",
-    startup: true,
-  },
-};
-
-const Pieoptions = {
-  title: "My Daily Activities",
-  pieHole: 0.4,
-  animation: {
-    duration: 1000,
-    easing: "out",
-    startup: true,
-  },
-};
 
 function Page() {
   const [bookings, setBookings] = useState<any[]>([]);
@@ -304,6 +251,32 @@ function Page() {
                   chartType="PieChart"
                   data={Piedata}
                   options={Pieoptions}
+                  width="100%"
+                  height="400px"
+                  legendToggle
+                />
+              </div>
+              <div className="flex flex-col items-center ">
+                <h3 className="text-lg font-semibold text-gray-800 mb-2">
+                  Votes vs Cost
+                </h3>
+                <Chart
+                  chartType="ComboChart"
+                  data={dataCombo}
+                  options={optionsCombo}
+                  width="100%"
+                  height="400px"
+                  legendToggle
+                />
+              </div>
+              <div className="flex flex-col items-center">
+                <h3 className="text-lg font-semibold text-gray-800 mb-2">
+                  Daily Activities
+                </h3>
+                <Chart
+                  chartType="BarChart"
+                  data={dataBar}
+                  options={optionsBar}
                   width="100%"
                   height="400px"
                   legendToggle

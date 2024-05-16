@@ -2,7 +2,6 @@ import Faq from "@/components/Faq";
 import Features from "@/components/users/Features";
 import Footer from "@/components/users/Footer";
 import Hero from "@/components/users/Hero";
-import Menu from "@/components/users/Menu";
 import Navbar from "@/components/users/Navbar";
 import Restaurant from "@/components/users/Restaurant";
 import { Metadata } from "next";
