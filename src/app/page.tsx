@@ -1,4 +1,5 @@
 import Faq from "@/components/Faq";
+import Features from "@/components/users/Features";
 import Footer from "@/components/users/Footer";
 import Hero from "@/components/users/Hero";
 import Menu from "@/components/users/Menu";
@@ -18,7 +19,8 @@ export default function AuthenticationPage() {
       {/* <Home /> */}
       <Hero />
       <Restaurant />
-      <Menu />
+      {/* <Menu /> */}
+      <Features />
       <Faq/>
       <Footer />
     </>

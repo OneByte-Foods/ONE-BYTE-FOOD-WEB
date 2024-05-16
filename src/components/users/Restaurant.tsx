@@ -27,41 +27,49 @@ function Restaurant() {
   }, []);
 
   return (
-
-      <div className="container mx-auto px-4">
-        <h1 className="text-3xl font-bold mt-8 mb-4">Restaurants</h1>
-        <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {restaurants.map((restaurant) => (
-            <Link href={`/restaurants/${restaurant.restaurantName}`}
-              key={restaurant.restaurantName}
-              className={`bg-white shadow-md rounded-lg overflow-hidden ${!restaurant.isVerified && "opacity-50 relative"}`}
-            >
-              {
-                !restaurant.isVerified && (
-                  <span className="absolute top-0 right-0 bg-red-500 text-white px-2 py-1 text-xs font-bold">
-                    Comming Soon
-                  </span>
-                )
-              }
-              <img
-                src={restaurant.restaurantImage}
-                alt={restaurant.restaurantName}
-                className="w-full h-40 object-cover"
-              />
-              <div className="p-4">
-                <h2 className="text-xl font-bold mb-2">
-                  {restaurant.restaurantName}
-                </h2>
-                <p className="text-gray-600 mb-2">
-                  {restaurant.restaurantDescription}
-                </p>
-                <p className="text-gray-600">{restaurant.restaurantLocation}</p>
-              </div>
-            </Link>
-          ))}
-        </ul>
-      </div>
-    
+    <div className="container mx-auto px-4 py-10">
+        <div className="text-center mb-20 max-w-[400px] mx-auto">
+          <p className="text-sm text-orange-500 to-secondary ">
+            All the restaurant
+          </p>
+          <h1 className="text-3xl font-bold">Restaurants</h1>
+          <p className="text-xs text-gray-400">
+            Lorem ipsum dolor, sit amet consectetur adipisicing elit.
+            Perspiciatis delectus architecto error nesciunt,
+          </p>
+        </div>
+      <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        {restaurants.map((restaurant) => (
+          <Link
+            href={`/restaurants/${restaurant.restaurantName}`}
+            key={restaurant.restaurantName}
+            className={`bg-white shadow-md rounded-lg overflow-hidden ${
+              !restaurant.isVerified && "opacity-50 relative"
+            }`}
+          >
+            {!restaurant.isVerified && (
+              <span className="absolute top-0 right-0 bg-red-500 text-white px-2 py-1 text-xs font-bold">
+                Comming Soon
+              </span>
+            )}
+            <img
+              src={restaurant.restaurantImage}
+              alt={restaurant.restaurantName}
+              className="w-full h-40 object-cover"
+            />
+            <div className="p-4">
+              <h2 className="text-xl font-bold mb-2">
+                {restaurant.restaurantName}
+              </h2>
+              <p className="text-gray-600 mb-2">
+                {restaurant.restaurantDescription}
+              </p>
+              <p className="text-gray-600">{restaurant.restaurantLocation}</p>
+            </div>
+          </Link>
+        ))}
+      </ul>
+    </div>
   );
 }
 

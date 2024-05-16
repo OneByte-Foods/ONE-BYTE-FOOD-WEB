@@ -110,16 +110,16 @@ export function UserAuthFormLogin() {
             <p className="text-[#F17228] text-[16px]">{errorMessage}</p>
           </div>
           <Button type="submit" className="w-full" onClick={handleSubmit}>
-            Create an account
+            Login in
           </Button>
           <Button variant="outline" className="w-full" onClick={logGoogleUser}>
-            Sign up with Google
+            Sign in with Google
           </Button>
         </div>
         <div className="mt-4 text-center text-sm">
-          Already have an account?{" "}
-          <Link href="#" className="underline">
-            Sign in
+          Don't have an account?{" "}
+          <Link href="" className="underline">
+            Sing Up
           </Link>
         </div>
       </CardContent>
