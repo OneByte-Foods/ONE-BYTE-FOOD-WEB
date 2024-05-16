@@ -1,5 +1,4 @@
 "use client";
-import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -9,19 +8,67 @@ import {
 } from "@/components/ui/card";
 import { realDb } from "@/firebase/config";
 import { onValue, push, ref, set } from "firebase/database";
+import Link from "next/link";
 import { useEffect, useState } from "react";
-import gsap from "gsap";
-import {
-  LineChart,
-  Line,
-  CartesianGrid,
-  XAxis,
-  YAxis,
-  Tooltip,
-} from "recharts";
+import { Chart } from "react-google-charts";
 import { useSelector } from "react-redux";
 import { RootState } from "redux/reducer";
-import Link from "next/link";
+
+const data = [
+  ["Number of Votes", "Average Cost for Two"],
+  [105, 250],
+  [105, 250],
+  [105, 450],
+  [105, 550],
+  [105, 750],
+  [200, 300],
+  [45, 150],
+  [60, 200],
+  [150, 350],
+  [85, 220],
+  [120, 270],
+  [90, 180],
+  [110, 230],
+  [80, 190],
+];
+
+const Piedata = [
+  ["Task", "Hours per Day"],
+  ["Work", 11],
+  ["Eat", 2],
+  ["Commute", 2],
+  ["Watch TV", 2],
+  ["Sleep", 7],
+];
+
+const options = {
+  title: "Number of Votes vs Average Cost for Two",
+  hAxis: {
+    title: "Number of Votes",
+    minValue: 0,
+  },
+  vAxis: {
+    title: "Average Cost for Two (in USD)",
+  },
+  legend: { position: "top", alignment: "center" },
+  colors: ["#76A789"], // corrected the color code
+  animation: {
+    duration: 1000,
+    easing: "out",
+    startup: true,
+  },
+};
+
+const Pieoptions = {
+  title: "My Daily Activities",
+  pieHole: 0.4,
+  animation: {
+    duration: 1000,
+    easing: "out",
+    startup: true,
+  },
+};
+
 function Page() {
   const [bookings, setBookings] = useState<any[]>([]);
   const { restaurantId } = useSelector((state: RootState) => state.users);
@@ -162,25 +209,25 @@ function Page() {
             <CardContent className="pl-2 grid grid-cols-2 items-center gap-6">
               <Link
                 href="/tables"
-                className="bg-[#17BEBE] rounded-md text-[#e5e5e5] flex items-center justify-center h-[200px]"
+                className="bg-[#17BEBE] rounded-md text-[#e5e5e5] flex items-center justify-center h[200px]"
               >
                 Tables
               </Link>
               <Link
                 href="/bookings"
-                className="bg-[#9117be] rounded-md text-[#e5e5e5] flex items-center justify-center h-[200px]"
+                className="bg-[#9117be] rounded-md text-[#e5e5e5] flex items-center justify-center h[200px]"
               >
                 Bookings
               </Link>
               <Link
                 href="/menu"
-                className="bg-[#17be30] rounded-md text-[#e5e5e5] flex items-center justify-center h-[200px]"
+                className="bg-[#17be30] rounded-md text-[#e5e5e5] flex items-center justify-center h[200px]"
               >
                 Menu
               </Link>
               <Link
                 href="/settings"
-                className="bg-[#be4617] rounded-md text-[#e5e5e5] flex items-center justify-center h-[200px]"
+                className="bg-[#be4617] rounded-md text-[#e5e5e5] flex items-center justify-center h[200px]"
               >
                 Settings
               </Link>
@@ -227,6 +274,43 @@ function Page() {
             </CardHeader>
             <CardContent></CardContent>
           </Card>
+        </div>
+
+        <div className="flex flex-col items-start p-4 bg-gray-100">
+          <h2 className="text-2xl font-semibold text-gray-800 mb-10 mt-7">
+            Restaurant Votes and Cost Analysis
+          </h2>
+          <div className="w-full max-w-7xl bg-white shadow-lg rounded-lg p-6 relative overflow-hidden">
+            <div className="grid grid-cols-2 gap-6 w-full">
+              <div className="flex flex-col items-center ">
+                <h3 className="text-lg font-semibold text-gray-800 mb-2">
+                  Votes vs Cost
+                </h3>
+                <Chart
+                  chartType="ColumnChart"
+                  data={data}
+                  options={options}
+                  width="100%"
+                  height="400px"
+                  legendToggle
+                />
+              </div>
+              
+              <div className="flex flex-col items-center">
+                <h3 className="text-lg font-semibold text-gray-800 mb-2">
+                  Daily Activities
+                </h3>
+                <Chart
+                  chartType="PieChart"
+                  data={Piedata}
+                  options={Pieoptions}
+                  width="100%"
+                  height="400px"
+                  legendToggle
+                />
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </>
