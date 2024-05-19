@@ -1,9 +1,6 @@
 import { Metadata } from "next";
-import Link from "next/link";
-import SingupBg from "../../../public/signup.jpg";
 
 import { UserAuthFormLogin } from "@/components/user-auth-form-login";
-import Image from "next/image";
 
 export const metadata: Metadata = {
   title: "signin - One Byte Food",

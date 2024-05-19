@@ -1,5 +1,4 @@
 "use client";
-import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -8,20 +7,15 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { realDb } from "@/firebase/config";
+import { Piedata, Pieoptions, data, dataBar, dataCombo, options, optionsBar, optionsCombo } from "@/utils/utils";
 import { onValue, push, ref, set } from "firebase/database";
+import Link from "next/link";
 import { useEffect, useState } from "react";
-import gsap from "gsap";
-import {
-  LineChart,
-  Line,
-  CartesianGrid,
-  XAxis,
-  YAxis,
-  Tooltip,
-} from "recharts";
+import { Chart } from "react-google-charts";
 import { useSelector } from "react-redux";
 import { RootState } from "redux/reducer";
-import Link from "next/link";
+
+
 function Page() {
   const [bookings, setBookings] = useState<any[]>([]);
   const { restaurantId } = useSelector((state: RootState) => state.users);
@@ -162,26 +156,30 @@ function Page() {
             <CardContent className="pl-2 grid grid-cols-2 items-center gap-6">
               <Link
                 href="/tables"
-                className="bg-[#17BEBE] rounded-md text-[#e5e5e5] flex items-center justify-center h-[200px]"
+                className="bg-[#17BEBE] rounded-md text-[#e5e5e5] flex items-center justify-center h-40"
               >
+                {/* <imgsrc="one_bytes_icon.png" alt="" /> */}
                 Tables
               </Link>
               <Link
                 href="/bookings"
-                className="bg-[#9117be] rounded-md text-[#e5e5e5] flex items-center justify-center h-[200px]"
+                className="bg-[#9117be] rounded-md text-[#e5e5e5] flex items-center justify-center h-40"
               >
+                {/* <img src="one_bytes_icon.png" alt="" /> */}
                 Bookings
               </Link>
               <Link
                 href="/menu"
-                className="bg-[#17be30] rounded-md text-[#e5e5e5] flex items-center justify-center h-[200px]"
+                className="bg-[#17be30] rounded-md text-[#e5e5e5] flex items-center justify-center h-40"
               >
+                {/* <img src="one_bytes_icon.png" alt="" /> */}
                 Menu
               </Link>
               <Link
                 href="/settings"
-                className="bg-[#be4617] rounded-md text-[#e5e5e5] flex items-center justify-center h-[200px]"
+                className="bg-[#be4617] rounded-md text-[#e5e5e5] flex items-center justify-center h-40"
               >
+                {/* <img src="one_bytes_icon.png" alt="" /> */}
                 Settings
               </Link>
             </CardContent>
@@ -202,7 +200,7 @@ function Page() {
                         <div className="flex gap-4 items-center">
                           <img
                             src={booking.userProfilePic}
-                            alt="profile"
+                            // alt="profile"
                             className="w-10 h-10 rounded-full"
                           />
                           <div>
@@ -227,6 +225,69 @@ function Page() {
             </CardHeader>
             <CardContent></CardContent>
           </Card>
+        </div>
+
+        <div className="flex flex-col items-start p-4 bg-gray-100">
+          <h2 className="text-2xl font-semibold text-gray-800 mb-10 mt-7">
+            Restaurant Votes and Cost Analysis
+          </h2>
+          <div className="w-full max-w-7xl bg-white shadow-lg rounded-lg p-6 relative overflow-hidden">
+            <div className="grid grid-cols-2 gap-6 w-full">
+              <div className="flex flex-col items-center ">
+                <h3 className="text-lg font-semibold text-gray-800 mb-2">
+                  Votes vs Cost
+                </h3>
+                <Chart
+                  chartType="ColumnChart"
+                  data={data}
+                  options={options}
+                  width="100%"
+                  height="400px"
+                  legendToggle
+                />
+              </div>
+              
+              <div className="flex flex-col items-center">
+                <h3 className="text-lg font-semibold text-gray-800 mb-2">
+                  Daily Activities
+                </h3>
+                <Chart
+                  chartType="PieChart"
+                  data={Piedata}
+                  options={Pieoptions}
+                  width="100%"
+                  height="400px"
+                  legendToggle
+                />
+              </div>
+              <div className="flex flex-col items-center ">
+                <h3 className="text-lg font-semibold text-gray-800 mb-2">
+                  Votes vs Cost
+                </h3>
+                <Chart
+                  chartType="ComboChart"
+                  data={dataCombo}
+                  options={optionsCombo}
+                  width="100%"
+                  height="400px"
+                  legendToggle
+                />
+              </div>
+              <div className="flex flex-col items-center">
+                <h3 className="text-lg font-semibold text-gray-800 mb-2">
+                  Daily Activities
+                </h3>
+                <Chart
+                  chartType="BarChart"
+                  data={dataBar}
+                  options={optionsBar}
+                  width="100%"
+                  height="400px"
+                  legendToggle
+                />
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </>
