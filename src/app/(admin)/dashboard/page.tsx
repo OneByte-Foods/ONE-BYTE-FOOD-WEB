@@ -156,26 +156,30 @@ function Page() {
             <CardContent className="pl-2 grid grid-cols-2 items-center gap-6">
               <Link
                 href="/tables"
-                className="bg-[#17BEBE] rounded-md text-[#e5e5e5] flex items-center justify-center h[200px]"
+                className="bg-[#17BEBE] rounded-md text-[#e5e5e5] flex items-center justify-center h-40"
               >
+                {/* <imgsrc="one_bytes_icon.png" alt="" /> */}
                 Tables
               </Link>
               <Link
                 href="/bookings"
-                className="bg-[#9117be] rounded-md text-[#e5e5e5] flex items-center justify-center h[200px]"
+                className="bg-[#9117be] rounded-md text-[#e5e5e5] flex items-center justify-center h-40"
               >
+                {/* <img src="one_bytes_icon.png" alt="" /> */}
                 Bookings
               </Link>
               <Link
                 href="/menu"
-                className="bg-[#17be30] rounded-md text-[#e5e5e5] flex items-center justify-center h[200px]"
+                className="bg-[#17be30] rounded-md text-[#e5e5e5] flex items-center justify-center h-40"
               >
+                {/* <img src="one_bytes_icon.png" alt="" /> */}
                 Menu
               </Link>
               <Link
                 href="/settings"
-                className="bg-[#be4617] rounded-md text-[#e5e5e5] flex items-center justify-center h[200px]"
+                className="bg-[#be4617] rounded-md text-[#e5e5e5] flex items-center justify-center h-40"
               >
+                {/* <img src="one_bytes_icon.png" alt="" /> */}
                 Settings
               </Link>
             </CardContent>
@@ -196,7 +200,7 @@ function Page() {
                         <div className="flex gap-4 items-center">
                           <img
                             src={booking.userProfilePic}
-                            alt="profile"
+                            // alt="profile"
                             className="w-10 h-10 rounded-full"
                           />
                           <div>
