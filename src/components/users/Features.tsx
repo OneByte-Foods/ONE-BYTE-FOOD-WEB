@@ -1,5 +1,7 @@
 import React from "react";
 import Dashboard from "../../../public/dashboard.png";
+import Table from "../../../public/table1.jpg";
+import Mobile from "../../../public/mobileapp.jpg";
 import Image from "next/image";
 
 function Features() {
@@ -29,7 +31,11 @@ function Features() {
           </div>
         </div>
         <div className="flex items-center gap-20">
-          <div className="h-[200px] w-[300px] border-[2px] border-black"></div>
+          <div className="h-[200px] w-[300px] border-[2px] border-black relative">
+          <Image src={Table} alt="Table" fill={ true } />
+          
+
+          </div>
           <div className="flex flex-col gap-2 w-[550px]">
             <h1 className="text-2xl font-bold">Table Bookings</h1>
             <p className="text-xl">
@@ -48,7 +54,10 @@ function Features() {
               amet consectetur adipisicing elit.
             </p>
           </div>
-          <div className="h-[200px] w-[300px] border-[2px] border-black"></div>
+          <div className="h-[200px] w-[300px] border-[2px] border-black relative">
+          <Image src={Mobile} alt="Mobileapp" fill={ true } />
+
+          </div>
         </div>
       </div>
     </div>
