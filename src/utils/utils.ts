@@ -1,7 +1,7 @@
 
 export  const data = [
-    ["Number of Votes", "Average Cost for Two"],
-    [105, 250],
+    ["Booking", "Month"],
+    [105, 100],
     [105, 250],
     [105, 450],
     [105, 550],
@@ -19,32 +19,31 @@ export  const data = [
   
   export  const Piedata = [
     ["Task", "Hours per Day"],
-    ["Work", 11],
-    ["Eat", 2],
-    ["Commute", 2],
-    ["Watch TV", 2],
-    ["Sleep", 7],
+    ["Table Booking", 11],
+    ["Food Odering", 2],
+    ["Pre order", 2],
+  
   ];
   export   const dataCombo = [
     [
-      "Month",
-      "Bolivia",
-      "Ecuador",
-      "Madagascar",
-      "Papua New Guinea",
-      "Rwanda",
-      "Average",
+      "",
+      "RowA",
+      "RowB",
+      "RowC",
+      "RowD",
+      "RowE",
+      "RowF",
     ],
-    ["2004/05", 165, 938, 522, 998, 450, 614.6],
-    ["2005/06", 135, 1120, 599, 1268, 288, 682],
-    ["2006/07", 157, 1167, 587, 807, 397, 623],
-    ["2007/08", 139, 1110, 615, 968, 215, 609.4],
-    ["2008/09", 136, 691, 629, 1026, 366, 569.6],
+    ["2024/01", 165, 938, 522, 998, 450, 614.6],
+    ["2024/02", 135, 1120, 599, 1268, 288, 682],
+    ["2024/03", 157, 1167, 587, 807, 397, 623],
+    ["2024/04", 139, 1110, 615, 968, 215, 609.4],
+    ["2024/05", 136, 691, 629, 1026, 366, 569.6],
   ];
   
   export   const optionsCombo = {
-    title: "Monthly Coffee Production by Country",
-    vAxis: { title: "Cups" },
+    title: "Monthly Table Price",
+    vAxis: { title: "Price" },
     hAxis: { title: "Month" },
     seriesType: "bars",
     series: { 5: { type: "line" } },
@@ -52,14 +51,14 @@ export  const data = [
   
   
   export  const options = {
-    title: "Number of Votes vs Average Cost for Two",
+    title: "Price of Table of Price vs Price of Food",
     hAxis: {
-      title: "Number of Votes",
+      title: "Price of Table",
       minValue: 0,
     },
     vAxis: {
-      title: "Average Cost for Two (in USD)",
-    },
+      title: "Price of Votes",
+    },  
     legend: { position: "top", alignment: "center" },
     colors: ["#76A789"], // corrected the color code
     animation: {
@@ -70,7 +69,7 @@ export  const data = [
   };
   
   export   const Pieoptions = {
-    title: "My Daily Activities",
+    title: "Restaurant Daily Activities",
     pieHole: 0.4,
     animation: {
       duration: 1000,
@@ -80,22 +79,22 @@ export  const data = [
   };
   
   export const dataBar = [
-    ["City", "2010 Population", "2000 Population"],
-    ["New York City, NY", 8175000, 8008000],
-    ["Los Angeles, CA", 3792000, 3694000],
-    ["Chicago, IL", 2695000, 2896000],
-    ["Houston, TX", 2099000, 1953000],
-    ["Philadelphia, PA", 1526000, 1517000],
+    ["Row", "2023 Price", "2024 Price"],
+    ["RowA", 8175000, 8008000],
+    ["RowB", 3792000, 3694000],
+    ["RowC", 2695000, 2896000],
+    ["RowD", 2099000, 1953000],
+    ["RowE", 1526000, 1517000],
   ];
   
   export const optionsBar = {
-    title: "Population of Largest U.S. Cities",
+    title: "Yeary price comparison of the restaurant seats",
     chartArea: { width: "50%" },
     hAxis: {
-      title: "Total Population",
+      title: "Price",
       minValue: 0,
     },
     vAxis: {
-      title: "City",
+      title: "Row",
     },
   };

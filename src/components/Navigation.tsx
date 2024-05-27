@@ -81,7 +81,7 @@ function Navigation() {
               </Link>
             </>
           )}
-          {roles.includes("admin") && (
+          {/* {roles.includes("admin") && (
             <Link
               href="/users"
               className={`flex items-end gap-2 px-5 py-3 rounded-2xl ${
@@ -91,7 +91,7 @@ function Navigation() {
               <FaRegUser size={25} />
               <span className="text-sm">Users</span>
             </Link>
-          )}
+          )} */}
         </div>
       </div>
       <div className="flex flex-col gap-6">

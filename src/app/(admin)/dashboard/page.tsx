@@ -229,19 +229,19 @@ function Page() {
 
         <div className="flex flex-col items-start p-4 bg-gray-100">
           <h2 className="text-2xl font-semibold text-gray-800 mb-10 mt-7">
-            Restaurant Votes and Cost Analysis
+            Restaurant and Cost Analysis
           </h2>
           <div className="w-full max-w-7xl bg-white shadow-lg rounded-lg p-6 relative overflow-hidden">
             <div className="grid grid-cols-2 gap-6 w-full">
               <div className="flex flex-col items-center ">
                 <h3 className="text-lg font-semibold text-gray-800 mb-2">
-                  Votes vs Cost
+                  Price vs Foods
                 </h3>
                 <Chart
                   chartType="ColumnChart"
                   data={data}
                   options={options}
-                  width="100%"
+                  width=" %"
                   height="400px"
                   legendToggle
                 />
@@ -262,7 +262,7 @@ function Page() {
               </div>
               <div className="flex flex-col items-center ">
                 <h3 className="text-lg font-semibold text-gray-800 mb-2">
-                  Votes vs Cost
+                  Price of Table
                 </h3>
                 <Chart
                   chartType="ComboChart"

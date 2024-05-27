@@ -19,6 +19,7 @@ import { setUser } from "../../../redux/features/users-slice";
 import { RootState } from "redux/reducer";
 import { useDispatch } from "react-redux";
 import { loginSuccess, logout } from "../../../redux/features/auth-slice";
+import { removeUser } from "../../../redux/features/users-slice";
 
 function Navbar() {
   // const [user, setUser] = useState<any>(null);
@@ -34,6 +35,9 @@ function Navbar() {
     logedout();
     localStorage.removeItem("uid");
     dispatch(logout());
+    dispatch(removeUser())
+    
+    
   }
 
   useEffect(() => {
