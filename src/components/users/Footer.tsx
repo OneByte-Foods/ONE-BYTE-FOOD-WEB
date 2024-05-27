@@ -33,13 +33,13 @@ const Footer = () => {
             </div>
             {/* Social Handle */}
             <div className="flex items-center gap-3 mt-6">
-              <a href="#">
+              <a href="https://instagram.com">
                 <FaInstagram className="text-3xl" />
               </a>
-              <a href="#">
+              <a href="https://facebook.com">
                 <FaFacebook className="text-3xl" />
               </a>
-              <a href="#">
+              <a href="https://linkedin.com">
                 <FaLinkedin className="text-3xl" />
               </a>
             </div>
